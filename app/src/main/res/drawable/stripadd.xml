@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    //Here we create two items
+    //1) for background color..
+    //2) for logo
+
+    <item>
+        <shape>
+            <solid android:color="#000000"/>
+        </shape>
+    </item>
+
+    <item>
+        <bitmap android:src="@mipmap/stripadd" android:gravity="center"/>
+    </item>
+</layer-list>
