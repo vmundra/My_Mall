@@ -3,15 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     tools:context=".HomeFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/category_recyclerview"
-        android:background="@color/colorAccent"
-        android:elevation="3dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@color/colorAccent"
+        android:elevation="3dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -26,12 +26,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/category_recyclerview">
 
-        <include layout="@layout/sliding_ad_layout" />
+        <include layout="@layout/horizontal_scroll_layout" />
 
     </LinearLayout>
 
     <LinearLayout
 
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,30 +42,16 @@
         <include layout="@layout/strip_ad_layout" />
     </LinearLayout>
 
-<!--    <LinearLayout-->
-<!--        android:id="@+id/linearLayout3"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/category_recyclerview">-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
+        <include layout="@layout/sliding_ad_layout" />
 
-<!--        <include layout="@layout/slider_layout" />-->
-
-<!--    </LinearLayout>-->
-
-
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/category_recyclerview">-->
-
-<!--        <include layout="@layout/strip_ad_layout" />-->
-
-<!--    </LinearLayout>-->
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

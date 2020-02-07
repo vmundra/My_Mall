@@ -16,7 +16,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +47,13 @@ public class HomeFragment extends Fragment {
     //////////////////////Strip ad layout
     private ImageView stripAdImage;
     private ConstraintLayout stripAdContainer;
+    //////////////////////
+
+
+    ///////////////////////Horizontal product layout
+    private TextView horizontalLayoutTitle;
+    private Button horizontalLayoutviewAllBtn;
+    private RecyclerView horizontalRecyclerView;
     //////////////////////
 
     public HomeFragment() {
@@ -147,6 +156,33 @@ public class HomeFragment extends Fragment {
         stripAdImage.setImageResource(R.mipmap.stripadd);
         stripAdContainer.setBackgroundColor(Color.parseColor("#000000"));
 
+        //////////////////////////////////Horizontal product layout
+        horizontalLayoutTitle = view.findViewById(R.id.h_s_product_title);
+        horizontalLayoutviewAllBtn = view.findViewById(R.id.horizontal_scroll_view_all_btn);
+        horizontalRecyclerView = view.findViewById(R.id.horizontal_scroll_layout_recyclerview);
+
+
+        List<HorizontalProductScrollModel> horizontalProductScrollModelList = new ArrayList<>();
+
+        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Redmi","SD 200","Rs.10,000"));
+        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.app_icon,"Oppo","SD 200","Rs.10,000"));
+        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.green_email,"Vivo","SD 200","Rs.10,000"));
+        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.home_icon,"Poco","SD 200","Rs.10,000"));
+        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Xiami","SD 200","Rs.10,000"));
+        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"jio","SD 200","Rs.10,000"));
+        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Redmi","SD 200","Rs.10,000"));
+        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Redmi","SD 200","Rs.10,000"));
+
+
+        HorizontalProductScrollAdapter horizontalProductScrollAdapter = new HorizontalProductScrollAdapter(horizontalProductScrollModelList);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
+        horizontalRecyclerView.setLayoutManager(linearLayoutManager);
+
+        horizontalRecyclerView.setAdapter(horizontalProductScrollAdapter);
+        horizontalProductScrollAdapter.notifyDataSetChanged();
+
+        //////////////////////////////////Horizontal product layout
         return view;
     }
   ///////////////////////////////////////////////////////
