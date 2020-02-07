@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -198,6 +199,28 @@ public class HomeFragment extends Fragment {
         /////////////////////grid View
 
 
+        ///////////////////test
+
+        RecyclerView testing = view.findViewById(R.id.testing);
+        LinearLayoutManager testingLayoutManager = new LinearLayoutManager(getContext());
+        testingLayoutManager.setOrientation(RecyclerView.VERTICAL);
+        testing.setLayoutManager(testingLayoutManager);
+
+        List<HomePageModel> homePageModelList = new ArrayList<>();
+        homePageModelList.add(new HomePageModel(0,sliderModelList));
+        homePageModelList.add(new HomePageModel(1,R.drawable.stripadd,"#000000"));
+
+        homePageModelList.add(new HomePageModel(0,sliderModelList));
+        homePageModelList.add(new HomePageModel(1,R.mipmap.logo,"#ffff00"));
+
+        homePageModelList.add(new HomePageModel(0,sliderModelList));
+        homePageModelList.add(new HomePageModel(1,R.mipmap.banner,"#000000"));
+
+        HomePageAdapter adapter = new HomePageAdapter(homePageModelList);
+        testing.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+
+        ///////////////////test
 
 
 
