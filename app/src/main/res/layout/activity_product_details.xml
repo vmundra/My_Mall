@@ -35,9 +35,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
             android:orientation="vertical">
 
             <include layout="@layout/product_images_layout"/>
+
+            <include layout="@layout/reward_with_product_layout"/>
+
+            <include layout="@layout/product_description_layout"/>
 
         </LinearLayout>
     </ScrollView>
