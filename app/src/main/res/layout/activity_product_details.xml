@@ -44,6 +44,8 @@
 
             <include layout="@layout/product_description_layout"/>
 
+            <include layout="@layout/product_details_only_layout"/>
+
         </LinearLayout>
     </ScrollView>
 

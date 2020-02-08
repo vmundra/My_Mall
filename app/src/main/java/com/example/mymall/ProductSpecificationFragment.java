@@ -38,17 +38,21 @@ public class ProductSpecificationFragment extends Fragment {
         productSpecificationRecyclerView.setLayoutManager(linearLayoutManager);
 
         List<ProductSpecificationModel> productSpecificationModelList = new ArrayList<>();
-        productSpecificationModelList.add(new ProductSpecificationModel("RAM","8gb"));
-        productSpecificationModelList.add(new ProductSpecificationModel("RAM","8gb"));
-        productSpecificationModelList.add(new ProductSpecificationModel("RAM","8gb"));
-        productSpecificationModelList.add(new ProductSpecificationModel("RAM","8gb"));
-        productSpecificationModelList.add(new ProductSpecificationModel("RAM","8gb"));
-        productSpecificationModelList.add(new ProductSpecificationModel("RAM","8gb"));
-        productSpecificationModelList.add(new ProductSpecificationModel("RAM","8gb"));
-        productSpecificationModelList.add(new ProductSpecificationModel("RAM","8gb"));
-        productSpecificationModelList.add(new ProductSpecificationModel("RAM","8gb"));
-        productSpecificationModelList.add(new ProductSpecificationModel("RAM","8gb"));
-        productSpecificationModelList.add(new ProductSpecificationModel("RAM","8gb"));
+        productSpecificationModelList.add(new ProductSpecificationModel(0,"General"));
+        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
+        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
+        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
+        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
+        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
+
+        productSpecificationModelList.add(new ProductSpecificationModel(0,"Display"));
+        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
+        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
+        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
+        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
+        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
+        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
+
 
 
         ProductSpecificationAdapter productSpecificationAdapter = new ProductSpecificationAdapter(productSpecificationModelList);
