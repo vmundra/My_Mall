@@ -11,11 +11,12 @@
         android:roundIcon="@mipmap/app_round_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".CategoryActivity"></activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".RegisterActivity"
             android:screenOrientation="portrait" />

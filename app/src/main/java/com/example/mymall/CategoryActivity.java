@@ -1,74 +1,36 @@
 package com.example.mymall;
 
-
-import android.annotation.SuppressLint;
-import android.graphics.Color;
-import android.os.Bundle;
-
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 
-import android.os.Handler;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
-public class HomeFragment extends Fragment {
+public class CategoryActivity extends AppCompatActivity {
 
     private RecyclerView categoryRecyclerView;
-    private CategoryAdapter categoryAdapter;
-    private  RecyclerView testing;
 
-
-    public HomeFragment() {
-        // Required empty public constructor
-    }
-
-
-    @SuppressLint("ClickableViewAccessibility")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
-        categoryRecyclerView = view.findViewById(R.id.category_recyclerview);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        layoutManager.setOrientation(RecyclerView.HORIZONTAL);
-        categoryRecyclerView.setLayoutManager(layoutManager);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_category);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        List<CategoryModel> categoryModelList = new ArrayList<CategoryModel>();
-        categoryModelList.add(new CategoryModel("link","Home"));
-        categoryModelList.add(new CategoryModel("link","ECT"));
-        categoryModelList.add(new CategoryModel("link","jjhjhjh"));
-        categoryModelList.add(new CategoryModel("link","m m m m m "));
-        categoryModelList.add(new CategoryModel("link","jjjjj"));
-        categoryModelList.add(new CategoryModel("link","ergeh6666666"));
-        categoryModelList.add(new CategoryModel("link","sesebthrt"));
-        categoryModelList.add(new CategoryModel("link","dfgd"));
-        categoryModelList.add(new CategoryModel("link","jjjjj"));
-        categoryModelList.add(new CategoryModel("link","jjjjj"));
+        String title = getIntent().getStringExtra("CategoryName");
+        getSupportActionBar().setTitle(title);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        categoryAdapter = new CategoryAdapter(categoryModelList);
-        categoryRecyclerView.setAdapter(categoryAdapter);
-        categoryAdapter.notifyDataSetChanged();
+        categoryRecyclerView = findViewById(R.id.category_recyclerview);
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////
         List<SliderModel> sliderModelList = new ArrayList<SliderModel>();
 
@@ -107,11 +69,9 @@ public class HomeFragment extends Fragment {
 
         /////////////////////grid View
         ///////////////////test
-
-        testing = view.findViewById(R.id.home_page_recyclerview);
-        LinearLayoutManager testingLayoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager testingLayoutManager = new LinearLayoutManager(this);
         testingLayoutManager.setOrientation(RecyclerView.VERTICAL);
-        testing.setLayoutManager(testingLayoutManager);
+        categoryRecyclerView.setLayoutManager(testingLayoutManager);
 
         List<HomePageModel> homePageModelList = new ArrayList<>();
         homePageModelList.add(new HomePageModel(0,sliderModelList));
@@ -125,20 +85,39 @@ public class HomeFragment extends Fragment {
         homePageModelList.add(new HomePageModel(0,sliderModelList));
 
         HomePageAdapter adapter = new HomePageAdapter(homePageModelList);
-        testing.setAdapter(adapter);
+        categoryRecyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
-        ///////////////////test
-
-
-
-
-        return view;
     }
-  ///////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.search_icon, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        // ye h top right side ke 3 items ke liye, unme se koi ek bhi selecct hua to uska code yaha h......
+
+        int id = item.getItemId();
+        if(id == R.id.main_search_icon){
+
+            return true;
+        }
+        else if(id == android.R.id.home){
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
+
+
+
+
 
 
 
