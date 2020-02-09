@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FrameLayout frameLayout;
     private static final int HOME_FRAGMENT = 0;
     private static final int CART_FRAGMENT = 1;
+    private static final int ORDERS_FRAGMENT = 2;
 
     private static int currentFragment=-1;
 
@@ -125,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return true;
         }
         else if(id == R.id.main_cart_icon){
-            mycart();
+            gotoFragment("My Cart",new MyCartFragment(),CART_FRAGMENT);
             return true;
         }
 
@@ -144,13 +145,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             setFragment(new HomeFragment(),HOME_FRAGMENT);
         }
         else if(id == R.id.nav_my_orders){
-
+            gotoFragment("My Orders",new MyOrdersFragment(),ORDERS_FRAGMENT);
         }
         else if(id == R.id.nav_my_rewards){
 
         }
         else if(id == R.id.nav_my_cart){
-            mycart();
+            gotoFragment("My Cart",new MyCartFragment(),CART_FRAGMENT);
         }
         else if(id == R.id.nav_my_wishlist){
 
@@ -167,20 +168,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    private void mycart(){
+    private void gotoFragment(String title, Fragment fragment, int fragmentNo){
         actionBarLogo.setVisibility(View.GONE);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setTitle("My Cart");
+        getSupportActionBar().setTitle(title);
         // isse kya hota h ki humara sare menu bar ke options hat jayenge...coz user ko abhi next page ke usme ye nhi dikhna chahiye
         // isse exactly onCreateOptionMenu wala function jo upar h wo fir se run hota and abhi humara waha if wala statement run hoga.....
         invalidateOptionsMenu();
 
-        setFragment(new MyCartFragment(),CART_FRAGMENT);
+        setFragment(fragment,fragmentNo);
         // delh abhi yaha pr humne neeche 3 kyu pass kiya na
         // coz jab app ke left me navbar open karega tab tujhe jo options dekhenge usme se 3 rd wala option my cart ka h
         // and user ko ye bhata rhe h apan ki agar usne 3rd wala option select kiya to ye sab hoga.....
-        navigationView.getMenu().getItem(3).setChecked(true);
 
+        if(fragmentNo == CART_FRAGMENT) {
+            navigationView.getMenu().getItem(3).setChecked(true);
+        }
     }
 
 
@@ -198,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
-        
+
     }
 }
 
