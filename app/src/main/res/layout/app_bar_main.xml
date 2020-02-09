@@ -19,6 +19,7 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" >
 
             <ImageView
+                android:id="@+id/actionbar_logo"
                 android:src="@mipmap/logo"
                 android:adjustViewBounds="true"
                 android:layout_width="wrap_content"

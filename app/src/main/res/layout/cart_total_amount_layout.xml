@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
     android:background="#d6d6d6"
     android:elevation="3dp">
 
@@ -24,7 +26,6 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:text="PRICE DETAILS"
-            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

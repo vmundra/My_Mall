@@ -27,6 +27,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 
 // top right side ke 3 items tune menu->main.xml me set kiya h (bell,notification,cart ke icons ).........
@@ -46,25 +47,26 @@ import android.widget.FrameLayout;
 
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private AppBarConfiguration mAppBarConfiguration;
 
     private NavigationView navigationView;
+    private ImageView actionBarLogo;
 
     private FrameLayout frameLayout;
     private static final int HOME_FRAGMENT = 0;
     private static final int CART_FRAGMENT = 1;
 
-    private static int currentFragment;
+    private static int currentFragment=-1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        actionBarLogo = findViewById(R.id.actionbar_logo);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 //        FloatingActionButton fab = findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -76,7 +78,9 @@ public class MainActivity extends AppCompatActivity {
 //        });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
 
-         navigationView = findViewById(R.id.nav_view);
+         navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+         navigationView.bringToFront();
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -100,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
         // to sirf uss time usko upar ke icons dikhne chahiye,
         // nhi to baki sare pages me usko nhi dikhna chahiye
         if(currentFragment == HOME_FRAGMENT){
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
             // Inflate the menu; this adds items to the action bar if it is present.
             getMenuInflater().inflate(R.menu.main, menu);
         }
@@ -127,24 +132,15 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void mycart(){
-        // isse kya hota h ki humara sare menu bar ke options hat jayenge...coz user ko abhi next page ke usme ye nhi dikhna chahiye
-        // isse exactly onCreateOptionMenu wala function jo upar h wo fir se run hota and abhi humara waha if wala statement run hoga.....
-        invalidateOptionsMenu();
 
-        setFragment(new MyCartFragment(),CART_FRAGMENT);
-        // delh abhi yaha pr humne neeche 3 kyu pass kiya na
-        // coz jab app ke left me navbar open karega tab tujhe jo options dekhenge usme se 3 rd wala option my cart ka h
-        // and user ko ye bhata rhe h apan ki agar usne 3rd wala option select kiya to ye sab hoga.....
-        navigationView.getMenu().getItem(3).setChecked(true);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
     public boolean onNavigationItemSelected(MenuItem item){
 
         int id = item.getItemId();
+        item.setChecked(true);
 
         if(id == R.id.nav_my_mall){
+            actionBarLogo.setVisibility(View.VISIBLE);
+            invalidateOptionsMenu();
             setFragment(new HomeFragment(),HOME_FRAGMENT);
         }
         else if(id == R.id.nav_my_orders){
@@ -154,7 +150,6 @@ public class MainActivity extends AppCompatActivity {
 
         }
         else if(id == R.id.nav_my_cart){
-
             mycart();
         }
         else if(id == R.id.nav_my_wishlist){
@@ -172,15 +167,39 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    private void mycart(){
+        actionBarLogo.setVisibility(View.GONE);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle("My Cart");
+        // isse kya hota h ki humara sare menu bar ke options hat jayenge...coz user ko abhi next page ke usme ye nhi dikhna chahiye
+        // isse exactly onCreateOptionMenu wala function jo upar h wo fir se run hota and abhi humara waha if wala statement run hoga.....
+        invalidateOptionsMenu();
 
-    private void setFragment(Fragment fragment, int fragmentNo){
-        currentFragment = fragmentNo;
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(frameLayout.getId(),fragment);
-        fragmentTransaction.commit();
+        setFragment(new MyCartFragment(),CART_FRAGMENT);
+        // delh abhi yaha pr humne neeche 3 kyu pass kiya na
+        // coz jab app ke left me navbar open karega tab tujhe jo options dekhenge usme se 3 rd wala option my cart ka h
+        // and user ko ye bhata rhe h apan ki agar usne 3rd wala option select kiya to ye sab hoga.....
+        navigationView.getMenu().getItem(3).setChecked(true);
+
     }
 
 
+    private void setFragment(Fragment fragment, int fragmentNo){
+
+        if(fragmentNo != currentFragment) {
+            currentFragment = fragmentNo;
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+            fragmentTransaction.replace(frameLayout.getId(), fragment);
+            fragmentTransaction.commit();
+        }
+    }
+
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        
+    }
 }
 
 
