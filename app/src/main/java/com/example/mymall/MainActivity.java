@@ -50,7 +50,13 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
 
+    private NavigationView navigationView;
+
     private FrameLayout frameLayout;
+    private static final int HOME_FRAGMENT = 0;
+    private static final int CART_FRAGMENT = 1;
+
+    private static int currentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 //        });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+         navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -85,13 +91,18 @@ public class MainActivity extends AppCompatActivity {
         navigationView.getMenu().getItem(0).setChecked(true);
 
         frameLayout = findViewById(R.id.main_framelayout);
-        setFragment(new HomeFragment());
+        setFragment(new HomeFragment(),HOME_FRAGMENT);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        // ye if condition ye check krta h ki agar humara home page pr h user..
+        // to sirf uss time usko upar ke icons dikhne chahiye,
+        // nhi to baki sare pages me usko nhi dikhna chahiye
+        if(currentFragment == HOME_FRAGMENT){
+            // Inflate the menu; this adds items to the action bar if it is present.
+            getMenuInflater().inflate(R.menu.main, menu);
+        }
         return true;
     }
 
@@ -109,10 +120,23 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         else if(id == R.id.main_cart_icon){
+            mycart();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void mycart(){
+        // isse kya hota h ki humara sare menu bar ke options hat jayenge...coz user ko abhi next page ke usme ye nhi dikhna chahiye
+        // isse exactly onCreateOptionMenu wala function jo upar h wo fir se run hota and abhi humara waha if wala statement run hoga.....
+        invalidateOptionsMenu();
+
+        setFragment(new MyCartFragment(),CART_FRAGMENT);
+        // delh abhi yaha pr humne neeche 3 kyu pass kiya na
+        // coz jab app ke left me navbar open karega tab tujhe jo options dekhenge usme se 3 rd wala option my cart ka h
+        // and user ko ye bhata rhe h apan ki agar usne 3rd wala option select kiya to ye sab hoga.....
+        navigationView.getMenu().getItem(3).setChecked(true);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -121,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if(id == R.id.nav_my_mall){
-
+            setFragment(new HomeFragment(),HOME_FRAGMENT);
         }
         else if(id == R.id.nav_my_orders){
 
@@ -131,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else if(id == R.id.nav_my_cart){
 
+            mycart();
         }
         else if(id == R.id.nav_my_wishlist){
 
@@ -148,8 +173,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void setFragment(Fragment fragment){
-
+    private void setFragment(Fragment fragment, int fragmentNo){
+        currentFragment = fragmentNo;
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(frameLayout.getId(),fragment);
         fragmentTransaction.commit();
