@@ -41,7 +41,7 @@ public class MyCartFragment extends Fragment {
         List<CartItemModel> cartItemModelList = new ArrayList<>();
 
         cartItemModelList.add(new CartItemModel(0,R.mipmap.image2,"Iphone 13",2,"Rs.68,9889/-","Rs.75,667/-",1,0,0));
-        cartItemModelList.add(new CartItemModel(0,R.mipmap.image2,"Gione 13",0,"Rs.68,9889/-","Rs.75,667/-",1,1,0));
+        cartItemModelList.add(new CartItemModel(0,R.mipmap.image2,"Galaxy Grand 13",0,"Rs.68,9889/-","Rs.75,667/-",1,1,0));
         cartItemModelList.add(new CartItemModel(0,R.mipmap.image2,"Jio 9",2,"Rs.68,9889/-","Rs.75,667/-",1,2,0));
         cartItemModelList.add(new CartItemModel(1,"Price (3 items)","Rs.90,000/-","Free","Rs.1,20,000/-","Rs.30,000/-"));
 
