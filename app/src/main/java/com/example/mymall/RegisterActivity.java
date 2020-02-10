@@ -12,6 +12,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private FrameLayout frameLayout;
     public static boolean onResetPasswordFragment = false;
+    public static boolean setSignUpFragment = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +20,12 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         frameLayout = findViewById(R.id.register_framelayout);
-        setDefaultFragment(new SignInFragment());   // Iska matlab sabse pehle signIn activity ka fragment open hona chahiye by default.....
+        if (setSignUpFragment) {
+            setSignUpFragment = false;
+            setDefaultFragment(new SignUpFragment());
+        } else {
+            setDefaultFragment(new SignInFragment());   // Iska matlab sabse pehle signIn activity ka fragment open hona chahiye by default.....
+        }
     }
 
     @Override
