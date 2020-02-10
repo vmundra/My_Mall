@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             drawer.closeDrawer(GravityCompat.START);
         }else{
             if(currentFragment == HOME_FRAGMENT) {
+                currentFragment = -1;
                 super.onBackPressed();
             }else{
                 actionBarLogo.setVisibility(View.VISIBLE);
