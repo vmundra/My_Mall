@@ -1,8 +1,10 @@
 package com.example.mymall;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -10,12 +12,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import static com.example.mymall.DeliveryActivity.SELECT_ADDRESS;
+import static com.example.mymall.MyAccountFragment.MANAGE_ADDRESS;
+import static com.example.mymall.MyAddressesActivity.refreshItem;
+
 public class AddressesAdapter extends RecyclerView.Adapter<AddressesAdapter.Viewholder> {
 
     private List<AddressesModel> addressesModelList;
+    private int MODE;
+    private int preSelectedPosition;
 
-    public AddressesAdapter(List<AddressesModel> addressesModelList) {
+    public AddressesAdapter(List<AddressesModel> addressesModelList,int MODE) {
         this.addressesModelList = addressesModelList;
+        this.MODE = MODE;
     }
 
     @NonNull
@@ -32,8 +41,9 @@ public class AddressesAdapter extends RecyclerView.Adapter<AddressesAdapter.View
         String username = addressesModelList.get(position).getFullname();
         String address = addressesModelList.get(position).getAddress();
         String pincode = addressesModelList.get(position).getPincode();
+        Boolean selected = addressesModelList.get(position).getSelected();
 
-        viewholder.setData(username,address,pincode);
+        viewholder.setData(username,address,pincode,selected,position);
     }
 
     @Override
@@ -47,18 +57,52 @@ public class AddressesAdapter extends RecyclerView.Adapter<AddressesAdapter.View
         private TextView fullname;
         private TextView address;
         private TextView pincode;
+        private ImageView icon;// ye wo checkmark ka symbol h;
 
         public Viewholder(@NonNull View itemView) {
             super(itemView);
             fullname = itemView.findViewById(R.id.name);
             address = itemView.findViewById(R.id.address);
             pincode = itemView.findViewById(R.id.pincode);
-
+            icon = itemView.findViewById(R.id.icon_view);
         }
-        private void setData(String username,String userAddress, String userPincode){
+        private void setData(String username, String userAddress, String userPincode, Boolean selected, final int position){
             fullname.setText(username);
             address.setText(userAddress);
             pincode.setText(userPincode);
+
+            if(MODE == SELECT_ADDRESS){
+
+                // isme checkmark dikhega user ko,
+                // mulitple address me sab koi ek ko checkmark dene ka
+                icon.setImageResource(R.mipmap.check);
+                if(selected){
+                    icon.setVisibility(View.VISIBLE);
+                    preSelectedPosition = position;
+                    Log.d("vinit","yesyesyesyesyesyesyesyesy");
+                }
+                else{
+                    icon.setVisibility(View.GONE);
+                }
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        if(preSelectedPosition != position) {
+                            addressesModelList.get(position).setSelected(true);
+                            addressesModelList.get(preSelectedPosition).setSelected(false);
+                            // to abhi hamara icon change hua h but humme abhi refresh karana padega data ko.....
+                            // isliye ye method ko call karenge jo static h
+
+                            refreshItem(preSelectedPosition, position);
+                            preSelectedPosition = position;
+                        }
+                    }
+                });
+            }
+            else if(MODE == MANAGE_ADDRESS){
+
+            }
         }
     }
 }
