@@ -45,7 +45,7 @@ public class MyRewardsFragment extends Fragment {
         rewardModelList.add(new RewardModel("Casback","till 2nd,June 2020","GET 30% OFF on all the elctronic products through Paytm"));
         rewardModelList.add(new RewardModel("Casback","till 2nd,June 2020","GET 30% OFF on all the elctronic products through Paytm"));
 
-        MyRewardsAdapter myRewardsAdapter = new MyRewardsAdapter(rewardModelList);
+        MyRewardsAdapter myRewardsAdapter = new MyRewardsAdapter(rewardModelList,false);
         rewardsRecyclerView.setAdapter(myRewardsAdapter);
         myRewardsAdapter.notifyDataSetChanged();
 
