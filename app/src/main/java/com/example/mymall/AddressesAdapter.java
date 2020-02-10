@@ -89,7 +89,6 @@ public class AddressesAdapter extends RecyclerView.Adapter<AddressesAdapter.View
                 if(selected){
                     icon.setVisibility(View.VISIBLE);
                     preSelectedPosition = position;
-                    Log.d("vinit","yesyesyesyesyesyesyesyesy");
                 }
                 else{
                     icon.setVisibility(View.GONE);
