@@ -58,14 +58,15 @@
         android:id="@+id/icon_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@mipmap/check"
         tools:visibility="visible" />
 
     <LinearLayout
+        android:id="@+id/option_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -77,8 +78,9 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="gone">
 
+
         <TextView
-            android:id="@+id/textView30"
+            android:id="@+id/edit_icon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="16dp"
@@ -86,16 +88,14 @@
             android:paddingEnd="16dp"
             android:paddingBottom="6dp"
             android:text="Edit"
-            android:visibility="gone"
             android:textAlignment="center"
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/textView29"
+            android:id="@+id/remove_icon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="16dp"
-            android:visibility="gone"
             android:paddingTop="6dp"
             android:paddingEnd="16dp"
             android:paddingBottom="6dp"

@@ -4,7 +4,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,7 +22,7 @@ public class AddressesAdapter extends RecyclerView.Adapter<AddressesAdapter.View
 
     private List<AddressesModel> addressesModelList;
     private int MODE;
-    private int preSelectedPosition;
+    private int preSelectedPosition = -1;
 
     public AddressesAdapter(List<AddressesModel> addressesModelList,int MODE) {
         this.addressesModelList = addressesModelList;
@@ -57,7 +59,9 @@ public class AddressesAdapter extends RecyclerView.Adapter<AddressesAdapter.View
         private TextView fullname;
         private TextView address;
         private TextView pincode;
+        private TextView editIcon, removeIcon;
         private ImageView icon;// ye wo checkmark ka symbol h;
+        private LinearLayout optionContainer;
 
         public Viewholder(@NonNull View itemView) {
             super(itemView);
@@ -65,6 +69,9 @@ public class AddressesAdapter extends RecyclerView.Adapter<AddressesAdapter.View
             address = itemView.findViewById(R.id.address);
             pincode = itemView.findViewById(R.id.pincode);
             icon = itemView.findViewById(R.id.icon_view);
+            editIcon = itemView.findViewById(R.id.edit_icon);
+            removeIcon = itemView.findViewById(R.id.remove_icon);
+            optionContainer = itemView.findViewById(R.id.option_container);
         }
         private void setData(String username, String userAddress, String userPincode, Boolean selected, final int position){
             fullname.setText(username);
@@ -72,6 +79,9 @@ public class AddressesAdapter extends RecyclerView.Adapter<AddressesAdapter.View
             pincode.setText(userPincode);
 
             if(MODE == SELECT_ADDRESS){
+
+                editIcon.setVisibility(View.GONE);
+                removeIcon.setVisibility(View.GONE);
 
                 // isme checkmark dikhega user ko,
                 // mulitple address me sab koi ek ko checkmark dene ka
@@ -102,6 +112,27 @@ public class AddressesAdapter extends RecyclerView.Adapter<AddressesAdapter.View
             }
             else if(MODE == MANAGE_ADDRESS){
 
+                editIcon.setVisibility(View.VISIBLE);
+                removeIcon.setVisibility(View.VISIBLE);
+
+                optionContainer.setVisibility(View.GONE);
+                icon.setImageResource(R.mipmap.vertical_dots);
+                icon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        optionContainer.setVisibility(View.VISIBLE);
+                        refreshItem(preSelectedPosition,preSelectedPosition);
+                        preSelectedPosition = position;
+                    }
+                });
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        refreshItem(preSelectedPosition,preSelectedPosition);
+                        preSelectedPosition = -1;
+                    }
+                });
             }
         }
     }
