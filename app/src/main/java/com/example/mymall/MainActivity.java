@@ -43,13 +43,6 @@ import android.widget.ImageView;
 // jaise amazon ke app jab left navbar kholte h to jo options dikhte h neeche wo waha pr h...........
 
 
-
-
-
-
-
-
-
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private AppBarConfiguration mAppBarConfiguration;
@@ -66,8 +59,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int WISHLIST_FRAGMENT = 3;
     private static final int REWARDS_FRAGMENT = 4;
     private static final int ACCOUNT_FRAGMENT = 5;
+    public static Boolean showCart = false;
 
-    private static int currentFragment=-1;
+    private int currentFragment = -1;
 
     private Window window;
 
@@ -92,9 +86,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
 
-         navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-         navigationView.bringToFront();
+        navigationView.bringToFront();
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -109,25 +103,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.getMenu().getItem(0).setChecked(true);
 
         frameLayout = findViewById(R.id.main_framelayout);
-        setFragment(new HomeFragment(),HOME_FRAGMENT);
+
+        if (showCart) {
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            // -2 neeche aisehi pass kiya h kyuki kuchh to pass krna h and -1 assigned h already.
+            gotoFragment("My Cart",new MyCartFragment(),-2);
+        } else {
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+            drawer.addDrawerListener(toggle);
+            toggle.syncState();
+
+            setFragment(new HomeFragment(), HOME_FRAGMENT);
+        }
     }
 
 
     @Override
     public void onBackPressed() {
 
-        DrawerLayout drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
-        if(drawer.isDrawerOpen(GravityCompat.START)){
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        }else{
-            if(currentFragment == HOME_FRAGMENT) {
+        } else {
+            if (currentFragment == HOME_FRAGMENT) {
                 currentFragment = -1;
                 super.onBackPressed();
-            }else{
-                actionBarLogo.setVisibility(View.VISIBLE);
-                invalidateOptionsMenu();
-                setFragment(new HomeFragment(),HOME_FRAGMENT);
-                navigationView.getMenu().getItem(0).setChecked(true);
+            } else {
+
+                if (showCart) {
+
+                    showCart = false;
+                    finish();
+                } else {
+                    actionBarLogo.setVisibility(View.VISIBLE);
+                    invalidateOptionsMenu();
+                    setFragment(new HomeFragment(), HOME_FRAGMENT);
+                    navigationView.getMenu().getItem(0).setChecked(true);
+                }
             }
         }
     }
@@ -137,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // ye if condition ye check krta h ki agar humara home page pr h user..
         // to sirf uss time usko upar ke icons dikhne chahiye,
         // nhi to baki sare pages me usko nhi dikhna chahiye
-        if(currentFragment == HOME_FRAGMENT){
+        if (currentFragment == HOME_FRAGMENT) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             // Inflate the menu; this adds items to the action bar if it is present.
             getMenuInflater().inflate(R.menu.main, menu);
@@ -151,58 +164,57 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // ye h top right side ke 3 items ke liye, unme se koi ek bhi selecct hua to uska code yaha h......
 
         int id = item.getItemId();
-        if(id == R.id.main_search_icon){
+        if (id == R.id.main_search_icon) {
 
             return true;
-        }
-        else if(id == R.id.main_notification_icon){
+        } else if (id == R.id.main_notification_icon) {
+            return true;
+        } else if (id == R.id.main_cart_icon) {
+            gotoFragment("My Cart", new MyCartFragment(), CART_FRAGMENT);
             return true;
         }
-        else if(id == R.id.main_cart_icon){
-            gotoFragment("My Cart",new MyCartFragment(),CART_FRAGMENT);
-            return true;
+        else if(id == android.R.id.home){
+            if(showCart){
+                showCart = false;
+                finish();
+                return true;
+            }
         }
 
         return super.onOptionsItemSelected(item);
     }
 
 
-    public boolean onNavigationItemSelected(MenuItem item){
+    public boolean onNavigationItemSelected(MenuItem item) {
 
         int id = item.getItemId();
         item.setChecked(true);
 
-        if(id == R.id.nav_my_mall){
+        if (id == R.id.nav_my_mall) {
             actionBarLogo.setVisibility(View.VISIBLE);
             invalidateOptionsMenu();
-            setFragment(new HomeFragment(),HOME_FRAGMENT);
-        }
-        else if(id == R.id.nav_my_orders){
-            gotoFragment("My Orders",new MyOrdersFragment(),ORDERS_FRAGMENT);
-        }
-        else if(id == R.id.nav_my_rewards){
-            gotoFragment("My Rewards",new MyRewardsFragment(),REWARDS_FRAGMENT);
-        }
-        else if(id == R.id.nav_my_cart){
-            gotoFragment("My Cart",new MyCartFragment(),CART_FRAGMENT);
-        }
-        else if(id == R.id.nav_my_wishlist){
+            setFragment(new HomeFragment(), HOME_FRAGMENT);
+        } else if (id == R.id.nav_my_orders) {
+            gotoFragment("My Orders", new MyOrdersFragment(), ORDERS_FRAGMENT);
+        } else if (id == R.id.nav_my_rewards) {
+            gotoFragment("My Rewards", new MyRewardsFragment(), REWARDS_FRAGMENT);
+        } else if (id == R.id.nav_my_cart) {
+            gotoFragment("My Cart", new MyCartFragment(), CART_FRAGMENT);
+        } else if (id == R.id.nav_my_wishlist) {
 
-            gotoFragment("My Wishlist",new MyWishlistFragment(),WISHLIST_FRAGMENT);
-        }
-        else if(id == R.id.nav_my_account){
-            gotoFragment("My Account",new MyAccountFragment(),ACCOUNT_FRAGMENT);
-        }
-        else if(id == R.id.nav_sign_out){
+            gotoFragment("My Wishlist", new MyWishlistFragment(), WISHLIST_FRAGMENT);
+        } else if (id == R.id.nav_my_account) {
+            gotoFragment("My Account", new MyAccountFragment(), ACCOUNT_FRAGMENT);
+        } else if (id == R.id.nav_sign_out) {
 
         }
 
-        DrawerLayout drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    private void gotoFragment(String title, Fragment fragment, int fragmentNo){
+    private void gotoFragment(String title, Fragment fragment, int fragmentNo) {
         actionBarLogo.setVisibility(View.GONE);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setTitle(title);
@@ -210,36 +222,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // isse exactly onCreateOptionMenu wala function jo upar h wo fir se run hota and abhi humara waha if wala statement run hoga.....
         invalidateOptionsMenu();
 
-        setFragment(fragment,fragmentNo);
+        setFragment(fragment, fragmentNo);
         // delh abhi yaha pr humne neeche 3 kyu pass kiya na
         // coz jab app ke left me navbar open karega tab tujhe jo options dekhenge usme se 3 rd wala option my cart ka h
         // and user ko ye bhata rhe h apan ki agar usne 3rd wala option select kiya to ye sab hoga.....
 
-        if(fragmentNo == CART_FRAGMENT) {
+        if (fragmentNo == CART_FRAGMENT) {
             navigationView.getMenu().getItem(3).setChecked(true);
         }
-        if(fragmentNo == WISHLIST_FRAGMENT) {
+        if (fragmentNo == WISHLIST_FRAGMENT) {
             navigationView.getMenu().getItem(4).setChecked(true);
         }
-        if(fragmentNo == REWARDS_FRAGMENT) {
+        if (fragmentNo == REWARDS_FRAGMENT) {
             navigationView.getMenu().getItem(2).setChecked(true);
         }
-        if(fragmentNo == ACCOUNT_FRAGMENT) {
+        if (fragmentNo == ACCOUNT_FRAGMENT) {
             navigationView.getMenu().getItem(5).setChecked(true);
         }
 
     }
 
 
-    private void setFragment(Fragment fragment, int fragmentNo){
+    private void setFragment(Fragment fragment, int fragmentNo) {
 
-        if(fragmentNo != currentFragment) {
+        if (fragmentNo != currentFragment) {
 
-            if(fragmentNo == REWARDS_FRAGMENT){
+            if (fragmentNo == REWARDS_FRAGMENT) {
                 window.setStatusBarColor(Color.parseColor("#5B04B1"));
                 toolbar.setBackgroundColor(Color.parseColor("#5B04B1"));
-            }
-            else{
+            } else {
                 window.setStatusBarColor(getResources().getColor(R.color.colorPrimary));
                 toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             }

@@ -72,19 +72,15 @@ public class HomeFragment extends Fragment {
         /////////////////
         List<SliderModel> sliderModelList = new ArrayList<SliderModel>();
 
-        sliderModelList.add(new SliderModel(R.mipmap.profile_placeholder,"#077AE4"));
-        sliderModelList.add(new SliderModel(R.mipmap.home_icon,"#077AE4"));
-        sliderModelList.add(new SliderModel(R.mipmap.green_email,"#077AE4"));
 
+        sliderModelList.add(new SliderModel(R.mipmap.green_email,"#077AE4"));
         sliderModelList.add(new SliderModel(R.mipmap.cart_white,"#077AE4"));
         sliderModelList.add(new SliderModel(R.mipmap.custom_error_icon,"#077AE4"));
         sliderModelList.add(new SliderModel(R.mipmap.close_cross,"#077AE4"));
         sliderModelList.add(new SliderModel(R.mipmap.cart_black,"#077AE4"));
         sliderModelList.add(new SliderModel(R.mipmap.profile_placeholder,"#077AE4"));
-
         sliderModelList.add(new SliderModel(R.mipmap.home_icon,"#077AE4"));
-        sliderModelList.add(new SliderModel(R.mipmap.green_email,"#077AE4"));
-        sliderModelList.add(new SliderModel(R.mipmap.cart_white,"#077AE4"));
+
 
         /////////////////
 
