@@ -10,6 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+
 import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
@@ -33,7 +36,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
         String icon = categoryModelList.get(position).getCategoryIconLink();
         String name = categoryModelList.get(position).getCategoryName();
-
+        viewHolder.setCategoryIcon(icon);
         viewHolder.setCategory(name,position);
     }
 
@@ -54,8 +57,13 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             categoryName = itemView.findViewById(R.id.category_name);
         }
 
-        private void setCategoryIcon() {
+        private void setCategoryIcon(String iconUrl) {
 
+            if (!iconUrl.equals("null")) {
+                // yha pr RequestOptions() parameter me apan aisehi ek image pass krte h
+                // ki wo jab tak database se apni image load na ho atleasst koi default image dikhe isliye........
+                Glide.with(itemView.getContext()).load(iconUrl).apply(new RequestOptions().placeholder(R.mipmap.home)).into(categoryIcon);
+            }
         }
 
         private void setCategory(final String name, final int position) {

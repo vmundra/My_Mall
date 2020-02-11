@@ -7,13 +7,17 @@
 
     <ImageView
         android:id="@+id/category_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="3dp"
+        android:scaleType="fitCenter"
+        android:layout_marginEnd="2dp"
+        app:layout_constraintBottom_toTopOf="@+id/category_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/home_icon" />
+        app:srcCompat="@mipmap/home" />
 
     <TextView
         android:id="@+id/category_name"
@@ -23,10 +27,10 @@
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="4dp"
         android:text="Home Appliances"
-        android:textSize="10sp"
         android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/category_icon" />
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
