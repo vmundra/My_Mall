@@ -64,22 +64,22 @@ public class ViewAllActivity extends AppCompatActivity {
 
             List<HorizontalProductScrollModel> horizontalProductScrollModelList = new ArrayList<>();
 
-            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2, "Redmi", "SD 200", "Rs.10,000"));
-            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.app_icon, "Oppo", "SD 200", "Rs.10,000"));
-            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.green_email, "Vivo", "SD 200", "Rs.10,000"));
-            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.home_icon, "Poco", "SD 200", "Rs.10,000"));
-            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2, "Xiami", "SD 200", "Rs.10,000"));
-            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2, "jio", "SD 200", "Rs.10,000"));
-            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2, "Redmi", "SD 200", "Rs.10,000"));
-            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2, "Redmi", "SD 200", "Rs.10,000"));
-            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2, "Redmi", "SD 200", "Rs.10,000"));
-            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2, "Redmi", "SD 200", "Rs.10,000"));
-            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2, "Redmi", "SD 200", "Rs.10,000"));
-            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2, "Redmi", "SD 200", "Rs.10,000"));
-            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2, "Redmi", "SD 200", "Rs.10,000"));
-            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2, "Redmi", "SD 200", "Rs.10,000"));
-            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2, "Redmi", "SD 200", "Rs.10,000"));
-            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2, "Redmi", "SD 200", "Rs.10,000"));
+//            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2, "Redmi", "SD 200", "Rs.10,000"));
+//            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.app_icon, "Oppo", "SD 200", "Rs.10,000"));
+//            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.green_email, "Vivo", "SD 200", "Rs.10,000"));
+//            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.home_icon, "Poco", "SD 200", "Rs.10,000"));
+//            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2, "Xiami", "SD 200", "Rs.10,000"));
+//            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2, "jio", "SD 200", "Rs.10,000"));
+//            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2, "Redmi", "SD 200", "Rs.10,000"));
+//            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2, "Redmi", "SD 200", "Rs.10,000"));
+//            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2, "Redmi", "SD 200", "Rs.10,000"));
+//            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2, "Redmi", "SD 200", "Rs.10,000"));
+//            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2, "Redmi", "SD 200", "Rs.10,000"));
+//            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2, "Redmi", "SD 200", "Rs.10,000"));
+//            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2, "Redmi", "SD 200", "Rs.10,000"));
+//            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2, "Redmi", "SD 200", "Rs.10,000"));
+//            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2, "Redmi", "SD 200", "Rs.10,000"));
+//            horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2, "Redmi", "SD 200", "Rs.10,000"));
 
 
             GridProductLayoutAdapter gridProductLayoutAdapter = new GridProductLayoutAdapter(horizontalProductScrollModelList);

@@ -183,6 +183,19 @@ public class HomeFragment extends Fragment {
                                 }
                                 else if((long) documentSnapshot.get("view_type") == 2){
 
+                                    List<HorizontalProductScrollModel> horizontalProductScrollModelList = new ArrayList<>();
+                                    long no_of_products = (long)documentSnapshot.get("no_of_products");
+
+                                    for(long x = 1;x < no_of_products +1; x++){
+
+                                        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(documentSnapshot.get("product_ID_"+x).toString(),
+                                                documentSnapshot.get("product_image_"+x).toString(),
+                                                documentSnapshot.get("product_title_"+x).toString(),
+                                                documentSnapshot.get("product_subtitle_"+x).toString(),
+                                                documentSnapshot.get("product_price_"+x).toString()));
+                                    }
+                                   homePageModelList.add(new HomePageModel(2,documentSnapshot.get("layout_title").toString(),
+                                           documentSnapshot.get("layout_background").toString(),horizontalProductScrollModelList));
                                 }
                                 else if((long) documentSnapshot.get("view_type") == 3){
 
