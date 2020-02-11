@@ -42,8 +42,9 @@ public class HomeFragment extends Fragment {
 
     private RecyclerView categoryRecyclerView;
     private CategoryAdapter categoryAdapter;
-    private  RecyclerView testing;
+    private RecyclerView homePageRecyclerView;
     private List<CategoryModel> categoryModelList;
+    private HomePageAdapter adapter;
 
     private FirebaseFirestore firebaseFirestore;
 
@@ -74,14 +75,13 @@ public class HomeFragment extends Fragment {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 // jitne documents ya data h utne time ye loop run hoga........
-                                categoryModelList.add(new CategoryModel(documentSnapshot.get("icon").toString(),documentSnapshot.get("categoryName").toString()));
+                                categoryModelList.add(new CategoryModel(documentSnapshot.get("icon").toString(), documentSnapshot.get("categoryName").toString()));
                             }
                             categoryAdapter.notifyDataSetChanged();
-                        }
-                        else{
+                        } else {
                             String error = task.getException().getMessage();
                             Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
                         }
@@ -89,79 +89,121 @@ public class HomeFragment extends Fragment {
                 });
 
 
-        /////////////////
-        List<SliderModel> sliderModelList = new ArrayList<SliderModel>();
+        ///////////////// Banner Slider
+//        List<SliderModel> sliderModelList = new ArrayList<SliderModel>();
+//
+//
+//        sliderModelList.add(new SliderModel(R.mipmap.green_email,"#077AE4"));
+//        sliderModelList.add(new SliderModel(R.mipmap.cart_white,"#077AE4"));
+//        sliderModelList.add(new SliderModel(R.mipmap.custom_error_icon,"#077AE4"));
+//        sliderModelList.add(new SliderModel(R.mipmap.close_cross,"#077AE4"));
+//        sliderModelList.add(new SliderModel(R.mipmap.cart_black,"#077AE4"));
+//        sliderModelList.add(new SliderModel(R.mipmap.profile_placeholder,"#077AE4"));
+//        sliderModelList.add(new SliderModel(R.mipmap.home_icon,"#077AE4"));
+//
 
-
-        sliderModelList.add(new SliderModel(R.mipmap.green_email,"#077AE4"));
-        sliderModelList.add(new SliderModel(R.mipmap.cart_white,"#077AE4"));
-        sliderModelList.add(new SliderModel(R.mipmap.custom_error_icon,"#077AE4"));
-        sliderModelList.add(new SliderModel(R.mipmap.close_cross,"#077AE4"));
-        sliderModelList.add(new SliderModel(R.mipmap.cart_black,"#077AE4"));
-        sliderModelList.add(new SliderModel(R.mipmap.profile_placeholder,"#077AE4"));
-        sliderModelList.add(new SliderModel(R.mipmap.home_icon,"#077AE4"));
-
-
-        /////////////////
-
-        //////////////////////////////////Horizontal product layout
-        List<HorizontalProductScrollModel> horizontalProductScrollModelList = new ArrayList<>();
-
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Redmi","SD 200","Rs.10,000"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.app_icon,"Oppo","SD 200","Rs.10,000"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.green_email,"Vivo","SD 200","Rs.10,000"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.home_icon,"Poco","SD 200","Rs.10,000"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Xiami","SD 200","Rs.10,000"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"jio","SD 200","Rs.10,000"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Redmi","SD 200","Rs.10,000"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Redmi","SD 200","Rs.10,000"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Redmi","SD 200","Rs.10,000"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Redmi","SD 200","Rs.10,000"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Redmi","SD 200","Rs.10,000"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Redmi","SD 200","Rs.10,000"));
-
+        /////////////////Banner Slider ends
 
         //////////////////////////////////Horizontal product layout
+        ///////////////////////////////// ye wo upar ke icons h category ke liye jo tere app ke hom epage me dikhte h
+        ///////////////////////////////// jaise appliances, shoes, wall arts, etc.
+//        List<HorizontalProductScrollModel> horizontalProductScrollModelList = new ArrayList<>();
+//
+//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Redmi","SD 200","Rs.10,000"));
+//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.app_icon,"Oppo","SD 200","Rs.10,000"));
+//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.green_email,"Vivo","SD 200","Rs.10,000"));
+//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.home_icon,"Poco","SD 200","Rs.10,000"));
+//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Xiami","SD 200","Rs.10,000"));
+//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"jio","SD 200","Rs.10,000"));
+//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Redmi","SD 200","Rs.10,000"));
+//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Redmi","SD 200","Rs.10,000"));
+//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Redmi","SD 200","Rs.10,000"));
+//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Redmi","SD 200","Rs.10,000"));
+//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Redmi","SD 200","Rs.10,000"));
+//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Redmi","SD 200","Rs.10,000"));
+//
 
+        //////////////////////////////////Horizontal product layout
 
 
         /////////////////////grid View
         ///////////////////test
 
-        testing = view.findViewById(R.id.home_page_recyclerview);
+        homePageRecyclerView = view.findViewById(R.id.home_page_recyclerview);
         LinearLayoutManager testingLayoutManager = new LinearLayoutManager(getContext());
         testingLayoutManager.setOrientation(RecyclerView.VERTICAL);
-        testing.setLayoutManager(testingLayoutManager);
+        homePageRecyclerView.setLayoutManager(testingLayoutManager);
 
-        List<HomePageModel> homePageModelList = new ArrayList<>();
-        homePageModelList.add(new HomePageModel(0,sliderModelList));
-        homePageModelList.add(new HomePageModel(1,R.drawable.stripadd,"#000000"));
-        homePageModelList.add(new HomePageModel(2,"Deals of the day",horizontalProductScrollModelList));
-        homePageModelList.add(new HomePageModel(3,"Deals of the day",horizontalProductScrollModelList));
-        homePageModelList.add(new HomePageModel(1,R.mipmap.logo,"#ffff00"));
-        homePageModelList.add(new HomePageModel(3,"Deals of the day",horizontalProductScrollModelList));
-        homePageModelList.add(new HomePageModel(2,"Deals of the day",horizontalProductScrollModelList));
-        homePageModelList.add(new HomePageModel(1,R.mipmap.banner,"#000000"));
-        homePageModelList.add(new HomePageModel(1,R.drawable.stripadd,"#000000"));
-        homePageModelList.add(new HomePageModel(2,"Deals of the day",horizontalProductScrollModelList));
-        homePageModelList.add(new HomePageModel(3,"Deals of the day",horizontalProductScrollModelList));
-        homePageModelList.add(new HomePageModel(1,R.mipmap.logo,"#ffff00"));
-        homePageModelList.add(new HomePageModel(3,"Deals of the day",horizontalProductScrollModelList));
-        homePageModelList.add(new HomePageModel(2,"Deals of the day",horizontalProductScrollModelList));
-        homePageModelList.add(new HomePageModel(1,R.mipmap.banner,"#000000"));
+        final List<HomePageModel> homePageModelList = new ArrayList<>();
+//        homePageModelList.add(new HomePageModel(0,sliderModelList));
+//        homePageModelList.add(new HomePageModel(1,R.drawable.stripadd,"#000000"));
+//        homePageModelList.add(new HomePageModel(2,"Deals of the day",horizontalProductScrollModelList));
+//        homePageModelList.add(new HomePageModel(3,"Deals of the day",horizontalProductScrollModelList));
+//        homePageModelList.add(new HomePageModel(1,R.mipmap.logo,"#ffff00"));
+//        homePageModelList.add(new HomePageModel(3,"Deals of the day",horizontalProductScrollModelList));
+//        homePageModelList.add(new HomePageModel(2,"Deals of the day",horizontalProductScrollModelList));
+//        homePageModelList.add(new HomePageModel(1,R.mipmap.banner,"#000000"));
+//        homePageModelList.add(new HomePageModel(1,R.drawable.stripadd,"#000000"));
+//        homePageModelList.add(new HomePageModel(2,"Deals of the day",horizontalProductScrollModelList));
+//        homePageModelList.add(new HomePageModel(3,"Deals of the day",horizontalProductScrollModelList));
+//        homePageModelList.add(new HomePageModel(1,R.mipmap.logo,"#ffff00"));
+//        homePageModelList.add(new HomePageModel(3,"Deals of the day",horizontalProductScrollModelList));
+//        homePageModelList.add(new HomePageModel(2,"Deals of the day",horizontalProductScrollModelList));
+//        homePageModelList.add(new HomePageModel(1,R.mipmap.banner,"#000000"));
 
-        HomePageAdapter adapter = new HomePageAdapter(homePageModelList);
-        testing.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+        adapter = new HomePageAdapter(homePageModelList);
+        homePageRecyclerView.setAdapter(adapter);
+
+        firebaseFirestore.collection("CATEGORIES")
+                .document("HOME")
+                .collection("TOP_DEALS").orderBy("index")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+
+                                if((long) documentSnapshot.get("view_type") == 0){
+                                    // case 0 matlab jo data h (jo images h ) wo banner_slider ke h......
+                                    List<SliderModel> sliderModelList = new ArrayList<>();
+                                    long no_of_banners = (long)documentSnapshot.get("no_of_banners");
+
+                                    for(long x = 1;x < no_of_banners+1; x++){
+
+                                        sliderModelList.add(new SliderModel(documentSnapshot.get("banner_"+x).toString(),
+                                                documentSnapshot.get("banner_"+x+"_background").toString()));
+                                    }
+                                    homePageModelList.add(new HomePageModel(0,sliderModelList));
+                                }
+
+                                else if((long) documentSnapshot.get("view_type") == 1){
+                                    homePageModelList.add(new HomePageModel(1,documentSnapshot.get("strip_ad_banner").toString(),
+                                            documentSnapshot.get("background").toString()));
+                                }
+                                else if((long) documentSnapshot.get("view_type") == 2){
+
+                                }
+                                else if((long) documentSnapshot.get("view_type") == 3){
+
+                                }
+
+                            }
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            String error = task.getException().getMessage();
+                            Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
 
         ///////////////////test
 
 
-
-
         return view;
     }
-  ///////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
 }

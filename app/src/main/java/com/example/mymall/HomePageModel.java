@@ -31,18 +31,18 @@ public class HomePageModel {
     /////////////////////////BannerSlider
 
     ////////////////////////Strip_Ad
-    private int resource;
+    private String resource;
     private String backgroundColor;
 
-    public HomePageModel(int type, int resource, String backgroundColor) {
+    public HomePageModel(int type, String resource, String backgroundColor) {
         this.type = type;
         this.resource = resource;
         this.backgroundColor = backgroundColor;
     }
-    public int getResource() {
+    public String getResource() {
         return resource;
     }
-    public void setResource(int resource) {
+    public void setResource(String resource) {
         this.resource = resource;
     }
     public String getBackgroundColor() {

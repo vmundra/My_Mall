@@ -2,14 +2,19 @@ package com.example.mymall;
 
 public class SliderModel {
 
-    private int banner;
+    private String banner;
     private String backgroundColor;
 
-    public int getBanner() {
+    public SliderModel(String banner, String backgroundColor) {
+        this.banner = banner;
+        this.backgroundColor = backgroundColor;
+    }
+
+    public String getBanner() {
         return banner;
     }
 
-    public void setBanner(int banner) {
+    public void setBanner(String banner) {
         this.banner = banner;
     }
 
@@ -18,11 +23,6 @@ public class SliderModel {
     }
 
     public void setBackgroundColor(String backgroundColor) {
-        this.backgroundColor = backgroundColor;
-    }
-
-    public SliderModel(int banner, String backgroundColor) {
-        this.banner = banner;
         this.backgroundColor = backgroundColor;
     }
 }

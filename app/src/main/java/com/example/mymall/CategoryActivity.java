@@ -33,35 +33,35 @@ public class CategoryActivity extends AppCompatActivity {
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////
         List<SliderModel> sliderModelList = new ArrayList<SliderModel>();
-
-        sliderModelList.add(new SliderModel(R.mipmap.profile_placeholder,"#077AE4"));
-        sliderModelList.add(new SliderModel(R.mipmap.home_icon,"#077AE4"));
-        sliderModelList.add(new SliderModel(R.mipmap.green_email,"#077AE4"));
-
-        sliderModelList.add(new SliderModel(R.mipmap.cart_white,"#077AE4"));
-        sliderModelList.add(new SliderModel(R.mipmap.custom_error_icon,"#077AE4"));
-        sliderModelList.add(new SliderModel(R.mipmap.close_cross,"#077AE4"));
-        sliderModelList.add(new SliderModel(R.mipmap.cart_black,"#077AE4"));
-        sliderModelList.add(new SliderModel(R.mipmap.profile_placeholder,"#077AE4"));
-
-        sliderModelList.add(new SliderModel(R.mipmap.home_icon,"#077AE4"));
-        sliderModelList.add(new SliderModel(R.mipmap.green_email,"#077AE4"));
-        sliderModelList.add(new SliderModel(R.mipmap.cart_white,"#077AE4"));
+//
+//        sliderModelList.add(new SliderModel(R.mipmap.profile_placeholder,"#077AE4"));
+//        sliderModelList.add(new SliderModel(R.mipmap.home_icon,"#077AE4"));
+//        sliderModelList.add(new SliderModel(R.mipmap.green_email,"#077AE4"));
+//
+//        sliderModelList.add(new SliderModel(R.mipmap.cart_white,"#077AE4"));
+//        sliderModelList.add(new SliderModel(R.mipmap.custom_error_icon,"#077AE4"));
+//        sliderModelList.add(new SliderModel(R.mipmap.close_cross,"#077AE4"));
+//        sliderModelList.add(new SliderModel(R.mipmap.cart_black,"#077AE4"));
+//        sliderModelList.add(new SliderModel(R.mipmap.profile_placeholder,"#077AE4"));
+//
+//        sliderModelList.add(new SliderModel(R.mipmap.home_icon,"#077AE4"));
+//        sliderModelList.add(new SliderModel(R.mipmap.green_email,"#077AE4"));
+//        sliderModelList.add(new SliderModel(R.mipmap.cart_white,"#077AE4"));
 
         /////////////////
 
         //////////////////////////////////Horizontal product layout
         List<HorizontalProductScrollModel> horizontalProductScrollModelList = new ArrayList<>();
-
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Redmi","SD 200","Rs.10,000"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.app_icon,"Oppo","SD 200","Rs.10,000"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.green_email,"Vivo","SD 200","Rs.10,000"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.home_icon,"Poco","SD 200","Rs.10,000"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Xiami","SD 200","Rs.10,000"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"jio","SD 200","Rs.10,000"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Redmi","SD 200","Rs.10,000"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Redmi","SD 200","Rs.10,000"));
-
+//
+//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Redmi","SD 200","Rs.10,000"));
+//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.app_icon,"Oppo","SD 200","Rs.10,000"));
+//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.green_email,"Vivo","SD 200","Rs.10,000"));
+//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.home_icon,"Poco","SD 200","Rs.10,000"));
+//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Xiami","SD 200","Rs.10,000"));
+//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"jio","SD 200","Rs.10,000"));
+//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Redmi","SD 200","Rs.10,000"));
+//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Redmi","SD 200","Rs.10,000"));
+//
 
         //////////////////////////////////Horizontal product layout
 
@@ -74,15 +74,15 @@ public class CategoryActivity extends AppCompatActivity {
         categoryRecyclerView.setLayoutManager(testingLayoutManager);
 
         List<HomePageModel> homePageModelList = new ArrayList<>();
-        homePageModelList.add(new HomePageModel(0,sliderModelList));
-        homePageModelList.add(new HomePageModel(1,R.drawable.stripadd,"#000000"));
-        homePageModelList.add(new HomePageModel(2,"Deals of the day",horizontalProductScrollModelList));
-        homePageModelList.add(new HomePageModel(3,"Deals of the day",horizontalProductScrollModelList));
-        homePageModelList.add(new HomePageModel(1,R.mipmap.logo,"#ffff00"));
-        homePageModelList.add(new HomePageModel(3,"Deals of the day",horizontalProductScrollModelList));
-        homePageModelList.add(new HomePageModel(2,"Deals of the day",horizontalProductScrollModelList));
-        homePageModelList.add(new HomePageModel(1,R.mipmap.banner,"#000000"));
-        homePageModelList.add(new HomePageModel(0,sliderModelList));
+//        homePageModelList.add(new HomePageModel(0,sliderModelList));
+//        homePageModelList.add(new HomePageModel(1,R.drawable.stripadd,"#000000"));
+//        homePageModelList.add(new HomePageModel(2,"Deals of the day",horizontalProductScrollModelList));
+//        homePageModelList.add(new HomePageModel(3,"Deals of the day",horizontalProductScrollModelList));
+//        homePageModelList.add(new HomePageModel(1,R.mipmap.logo,"#ffff00"));
+//        homePageModelList.add(new HomePageModel(3,"Deals of the day",horizontalProductScrollModelList));
+//        homePageModelList.add(new HomePageModel(2,"Deals of the day",horizontalProductScrollModelList));
+//        homePageModelList.add(new HomePageModel(1,R.mipmap.banner,"#000000"));
+//        homePageModelList.add(new HomePageModel(0,sliderModelList));
 
         HomePageAdapter adapter = new HomePageAdapter(homePageModelList);
         categoryRecyclerView.setAdapter(adapter);
