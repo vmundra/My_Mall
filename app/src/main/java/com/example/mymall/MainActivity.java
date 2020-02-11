@@ -1,10 +1,15 @@
 package com.example.mymall;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -59,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Toolbar toolbar;
 
     private FrameLayout frameLayout;
+    private ImageView noInternetConnection;
+
     private static final int HOME_FRAGMENT = 0;
     private static final int CART_FRAGMENT = 1;
     private static final int ORDERS_FRAGMENT = 2;
@@ -109,18 +116,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.getMenu().getItem(0).setChecked(true);
 
         frameLayout = findViewById(R.id.main_framelayout);
+        noInternetConnection = findViewById(R.id.no_internet_connection);
 
-        if (showCart) {
-            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            // -2 neeche aisehi pass kiya h kyuki kuchh to pass krna h and -1 assigned h already.
-            gotoFragment("My Cart",new MyCartFragment(),-2);
-        } else {
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
-            drawer.addDrawerListener(toggle);
-            toggle.syncState();
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-            setFragment(new HomeFragment(), HOME_FRAGMENT);
+        if (networkInfo != null && networkInfo.isConnected() == true) {
+
+            noInternetConnection.setVisibility(View.GONE);
+            if (showCart) {
+                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                // -2 neeche aisehi pass kiya h kyuki kuchh to pass krna h and -1 assigned h already.
+                gotoFragment("My Cart", new MyCartFragment(), -2);
+            } else {
+                ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                drawer.addDrawerListener(toggle);
+                toggle.syncState();
+
+                setFragment(new HomeFragment(), HOME_FRAGMENT);
+            }
+        }else{
+            Glide.with(this).load(R.drawable.no_internet_connection).into(noInternetConnection);
+            noInternetConnection.setVisibility(View.VISIBLE);
         }
     }
 
@@ -180,11 +198,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             signInDialog.setContentView(R.layout.sign_in_dialog);
             signInDialog.setCancelable(true);
 
-            signInDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+            signInDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
             Button dialogSignInBtn = signInDialog.findViewById(R.id.sign_in_btn);
             Button dialogSignUpBtn = signInDialog.findViewById(R.id.sign_up_btn);
-            final Intent registerIntent = new Intent(MainActivity.this,RegisterActivity.class);
+            final Intent registerIntent = new Intent(MainActivity.this, RegisterActivity.class);
 
             dialogSignInBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -206,11 +224,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             signInDialog.show();
 
-          //  gotoFragment("My Cart", new MyCartFragment(), CART_FRAGMENT);
+            //  gotoFragment("My Cart", new MyCartFragment(), CART_FRAGMENT);
             return true;
-        }
-        else if(id == android.R.id.home){
-            if(showCart){
+        } else if (id == android.R.id.home) {
+            if (showCart) {
                 showCart = false;
                 finish();
                 return true;
