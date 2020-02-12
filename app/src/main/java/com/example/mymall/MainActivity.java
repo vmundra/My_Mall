@@ -118,28 +118,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         frameLayout = findViewById(R.id.main_framelayout);
         noInternetConnection = findViewById(R.id.no_internet_connection);
 
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-        if (networkInfo != null && networkInfo.isConnected() == true) {
+        if (showCart) {
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            // -2 neeche aisehi pass kiya h kyuki kuchh to pass krna h and -1 assigned h already.
+            gotoFragment("My Cart", new MyCartFragment(), -2);
+        } else {
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.addDrawerListener(toggle);
+            toggle.syncState();
 
-            noInternetConnection.setVisibility(View.GONE);
-            if (showCart) {
-                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                // -2 neeche aisehi pass kiya h kyuki kuchh to pass krna h and -1 assigned h already.
-                gotoFragment("My Cart", new MyCartFragment(), -2);
-            } else {
-                ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-                drawer.addDrawerListener(toggle);
-                toggle.syncState();
-
-                setFragment(new HomeFragment(), HOME_FRAGMENT);
-            }
-        }else{
-            Glide.with(this).load(R.drawable.no_internet_connection).into(noInternetConnection);
-            noInternetConnection.setVisibility(View.VISIBLE);
+            setFragment(new HomeFragment(), HOME_FRAGMENT);
         }
+
+
     }
 
 

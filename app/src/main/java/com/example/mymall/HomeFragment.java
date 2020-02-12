@@ -2,7 +2,10 @@ package com.example.mymall;
 
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -23,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -50,6 +54,7 @@ public class HomeFragment extends Fragment {
     private CategoryAdapter categoryAdapter;
     private RecyclerView homePageRecyclerView;
     private HomePageAdapter adapter;
+    private ImageView noInternetConnection;
 
 
     public HomeFragment() {
@@ -63,25 +68,33 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        noInternetConnection = view.findViewById(R.id.no_internet_connection);
         categoryRecyclerView = view.findViewById(R.id.category_recyclerview);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        layoutManager.setOrientation(RecyclerView.HORIZONTAL);
-        categoryRecyclerView.setLayoutManager(layoutManager);
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+        if (networkInfo != null && networkInfo.isConnected() == true) {
+
+            noInternetConnection.setVisibility(View.GONE);
+
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+            layoutManager.setOrientation(RecyclerView.HORIZONTAL);
+            categoryRecyclerView.setLayoutManager(layoutManager);
 
 
-        categoryAdapter = new CategoryAdapter(categoryModelList);
-        categoryRecyclerView.setAdapter(categoryAdapter);
+            categoryAdapter = new CategoryAdapter(categoryModelList);
+            categoryRecyclerView.setAdapter(categoryAdapter);
 
-        if (categoryModelList.size() == 0){
+            if (categoryModelList.size() == 0) {
 
-            loadCategories(categoryAdapter,getContext());
-        }
-        else{
-            categoryAdapter.notifyDataSetChanged();
-        }
+                loadCategories(categoryAdapter, getContext());
+            } else {
+                categoryAdapter.notifyDataSetChanged();
+            }
 
 
-        ///////////////// Banner Slider
+            ///////////////// Banner Slider
 //        List<SliderModel> sliderModelList = new ArrayList<SliderModel>();
 //
 //
@@ -94,11 +107,11 @@ public class HomeFragment extends Fragment {
 //        sliderModelList.add(new SliderModel(R.mipmap.home_icon,"#077AE4"));
 //
 
-        /////////////////Banner Slider ends
+            /////////////////Banner Slider ends
 
-        //////////////////////////////////Horizontal product layout
-        ///////////////////////////////// ye wo upar ke icons h category ke liye jo tere app ke hom epage me dikhte h
-        ///////////////////////////////// jaise appliances, shoes, wall arts, etc.
+            //////////////////////////////////Horizontal product layout
+            ///////////////////////////////// ye wo upar ke icons h category ke liye jo tere app ke hom epage me dikhte h
+            ///////////////////////////////// jaise appliances, shoes, wall arts, etc.
 //        List<HorizontalProductScrollModel> horizontalProductScrollModelList = new ArrayList<>();
 //
 //        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Redmi","SD 200","Rs.10,000"));
@@ -115,16 +128,16 @@ public class HomeFragment extends Fragment {
 //        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.mipmap.image2,"Redmi","SD 200","Rs.10,000"));
 //
 
-        //////////////////////////////////Horizontal product layout
+            //////////////////////////////////Horizontal product layout
 
 
-        /////////////////////grid View
-        ///////////////////test
+            /////////////////////grid View
+            ///////////////////test
 
-        homePageRecyclerView = view.findViewById(R.id.home_page_recyclerview);
-        LinearLayoutManager testingLayoutManager = new LinearLayoutManager(getContext());
-        testingLayoutManager.setOrientation(RecyclerView.VERTICAL);
-        homePageRecyclerView.setLayoutManager(testingLayoutManager);
+            homePageRecyclerView = view.findViewById(R.id.home_page_recyclerview);
+            LinearLayoutManager testingLayoutManager = new LinearLayoutManager(getContext());
+            testingLayoutManager.setOrientation(RecyclerView.VERTICAL);
+            homePageRecyclerView.setLayoutManager(testingLayoutManager);
 
 //        homePageModelList.add(new HomePageModel(0,sliderModelList));
 //        homePageModelList.add(new HomePageModel(1,R.drawable.stripadd,"#000000"));
@@ -142,24 +155,28 @@ public class HomeFragment extends Fragment {
 //        homePageModelList.add(new HomePageModel(2,"Deals of the day",horizontalProductScrollModelList));
 //        homePageModelList.add(new HomePageModel(1,R.mipmap.banner,"#000000"));
 
-        adapter = new HomePageAdapter(homePageModelList);
-        homePageRecyclerView.setAdapter(adapter);
+            adapter = new HomePageAdapter(homePageModelList);
+            homePageRecyclerView.setAdapter(adapter);
 
-        if (homePageModelList.size() == 0){
+            if (homePageModelList.size() == 0) {
 
-            loadFragmentData(adapter,getContext());
+                loadFragmentData(adapter, getContext());
+            } else {
+                categoryAdapter.notifyDataSetChanged();
+            }
+
+            ///////////////////test
+
+
+        } else {
+            Glide.with(this).load(R.drawable.no_internet_connection).into(noInternetConnection);
+            noInternetConnection.setVisibility(View.VISIBLE);
         }
-        else{
-            categoryAdapter.notifyDataSetChanged();
-        }
-
-        ///////////////////test
 
 
+        ///////////////////////////////////////////////////////
         return view;
     }
-    ///////////////////////////////////////////////////////
-
 //////////////////////////////////////////////////////////////
 }
 
