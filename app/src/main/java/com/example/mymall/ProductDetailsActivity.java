@@ -172,6 +172,9 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
                     for(int x = 0; x<5;x++){
                         TextView rating = (TextView) ratingsNoContainer.getChildAt(x);
+
+                        // to yaha pr ye rating actually wo ratings ke main container, parent samajh le,
+                        // usko access krta h and uske 5 children ko access krke unka text set krta h..... :)
                         rating.setText(String.valueOf((long)documentSnapshot.get((5-x)+"_star")));
 
                         ProgressBar progressBar = (ProgressBar) ratingsPrgressBarContainer.getChildAt(x);
