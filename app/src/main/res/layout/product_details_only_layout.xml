@@ -25,7 +25,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/product_Details_body"
+        android:id="@+id/product_details_body"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:padding="16dp"

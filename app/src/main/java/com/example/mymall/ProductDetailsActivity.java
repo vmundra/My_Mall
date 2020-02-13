@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,15 +61,23 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     ///////////////////////////product description
     private ConstraintLayout productDetailsOnlyContainer;
+    private TextView productOnlyDescriptionBody;
     private ConstraintLayout productDetailsTabsContainer;
     private ViewPager productDetailsViewpager;
     private TabLayout productDetailsTabLayout;
+    public static String productDescription,productOtherDetails;
+    public static int tabPosition = -1;
+
+    public static List<ProductSpecificationModel> productSpecificationModelList = new ArrayList<>();
 
     ///////////////////////////product description
 
 
     /////////////////rating layout
     private LinearLayout rateNowContainer;
+    private TextView totalRatings, totalRatingsFigure;
+    private LinearLayout ratingsNoContainer;
+    private LinearLayout ratingsPrgressBarContainer;
     /////////////////rating layout
 
     @Override
@@ -98,11 +107,16 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
         productDetailsTabsContainer = findViewById(R.id.product_details_tabs_container);
         productDetailsOnlyContainer = findViewById(R.id.product_details_container);
+        productOnlyDescriptionBody = findViewById(R.id.product_details_body);
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
         productDetailsViewpager = findViewById(R.id.product_details_viewpager);
         productDetailsTabLayout = findViewById(R.id.product_details_tablayout);
+        totalRatings = findViewById(R.id.total_ratings);
+        ratingsNoContainer = findViewById(R.id.ratings_numbers_container);
+        totalRatingsFigure = findViewById(R.id.total_ratings_figure);
+        ratingsPrgressBarContainer = findViewById(R.id.ratings_progressbar_container);
 
         productImages = new ArrayList<>();
 
@@ -133,13 +147,41 @@ public class ProductDetailsActivity extends AppCompatActivity {
                         productDetailsTabsContainer.setVisibility(View.VISIBLE);
                         productDetailsOnlyContainer.setVisibility(View.GONE);
 
-                        ProductDescriptionFragment.productDescription = documentSnapshot.get("product_description").toString();
-                        ProductSpecificationFragment.productSpecificationModelList = new ArrayList<>();
+                        productDescription = documentSnapshot.get("product_description").toString();
+                        productOtherDetails = documentSnapshot.get("product_other_details").toString();
+
+                        for (long x =1; x< (long)documentSnapshot.get("total_specification_titles")+1;x++){
+
+                           productSpecificationModelList.add(new ProductSpecificationModel(0,
+                                    documentSnapshot.get("specification_title_"+x).toString()));
+
+
+                            for(long m = 1;m<(long)documentSnapshot.get("specification_title_"+x+"_total_fields")+1;m++){
+                               productSpecificationModelList.add(new ProductSpecificationModel(1,
+                                        documentSnapshot.get("specification_title_"+x+"_field_"+m+"_name").toString(),
+                                        documentSnapshot.get("specification_title_"+x+"_field_"+m+"_value").toString()));
+                            }
+                        }
                     }
                     else{
                         productDetailsTabsContainer.setVisibility(View.GONE);
                         productDetailsOnlyContainer.setVisibility(View.VISIBLE);
+                        productOnlyDescriptionBody.setText(documentSnapshot.get("product_description").toString());
                     }
+                    totalRatings.setText((long)documentSnapshot.get("total_ratings")+" ratings");
+
+                    for(int x = 0; x<5;x++){
+                        TextView rating = (TextView) ratingsNoContainer.getChildAt(x);
+                        rating.setText(String.valueOf((long)documentSnapshot.get((5-x)+"_star")));
+
+                        ProgressBar progressBar = (ProgressBar) ratingsPrgressBarContainer.getChildAt(x);
+                        int maxProgress = Integer.parseInt(String.valueOf((long)documentSnapshot.get("total_ratings")));
+                        progressBar.setMax(maxProgress);
+                        progressBar.setProgress(Integer.parseInt(String.valueOf((long)documentSnapshot.get((5-x)+"_star"))));
+
+                    }
+                    totalRatingsFigure.setText(String.valueOf((long)documentSnapshot.get("total_ratings")));
+
 
                     if((boolean)documentSnapshot.get("COD")){
                         codIndicator.setVisibility(View.VISIBLE);
@@ -180,6 +222,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         productDetailsTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                tabPosition = tab.getPosition();
                 productDetailsViewpager.setCurrentItem(tab.getPosition());
             }
 
