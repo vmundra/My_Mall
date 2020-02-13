@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.mymall.ProductDetailsActivity.productSpecificationModelList;
 
 
 /**
@@ -23,6 +22,7 @@ import static com.example.mymall.ProductDetailsActivity.productSpecificationMode
 public class ProductSpecificationFragment extends Fragment {
 
     private RecyclerView productSpecificationRecyclerView;
+    public List<ProductSpecificationModel> productSpecificationModelList;
 
     public ProductSpecificationFragment() {
         // Required empty public constructor

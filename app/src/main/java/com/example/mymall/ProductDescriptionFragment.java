@@ -10,10 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import static com.example.mymall.ProductDetailsActivity.productDescription;
-import static com.example.mymall.ProductDetailsActivity.productOtherDetails;
-import static com.example.mymall.ProductDetailsActivity.tabPosition;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,6 +17,7 @@ import static com.example.mymall.ProductDetailsActivity.tabPosition;
 public class ProductDescriptionFragment extends Fragment {
 
     private TextView descriptionBody;
+    public String body;
 
     public ProductDescriptionFragment() {
         // Required empty public constructor
@@ -34,18 +31,19 @@ public class ProductDescriptionFragment extends Fragment {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_product_description, container, false);
         descriptionBody = view.findViewById(R.id.tv_product_description);
+        descriptionBody.setText(body);
 
-        if(tabPosition == 0) {
-
-            // matlab jab koi bhi product ka description bhatate h tab
-            // agar first Description tab selected hoga to ye text daalna
-            // else agar 3rd tab selected hoga toh else wala text daalna
-
-            descriptionBody.setText(productDescription);
-        }
-        else{
-            descriptionBody.setText(productOtherDetails);
-        }
+//        if(tabPosition == 0) {
+//
+//            // matlab jab koi bhi product ka description bhatate h tab
+//            // agar first Description tab selected hoga to ye text daalna
+//            // else agar 3rd tab selected hoga toh else wala text daalna
+//
+//            descriptionBody.setText(productDescription);
+//        }
+//        else{
+//            descriptionBody.setText(productOtherDetails);
+//        }
         return view;
     }
 

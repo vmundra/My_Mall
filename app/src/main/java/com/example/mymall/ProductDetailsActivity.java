@@ -65,10 +65,10 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private ConstraintLayout productDetailsTabsContainer;
     private ViewPager productDetailsViewpager;
     private TabLayout productDetailsTabLayout;
-    public static String productDescription,productOtherDetails;
-    public static int tabPosition = -1;
+    private String productDescription,productOtherDetails;
+    private int tabPosition = -1;
 
-    public static List<ProductSpecificationModel> productSpecificationModelList = new ArrayList<>();
+    private List<ProductSpecificationModel> productSpecificationModelList = new ArrayList<>();
 
     ///////////////////////////product description
 
@@ -181,7 +181,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
                     }
                     totalRatingsFigure.setText(String.valueOf((long)documentSnapshot.get("total_ratings")));
-
+                    productDetailsViewpager.setAdapter(new ProductDetailsAdapter(getSupportFragmentManager(),productDetailsTabLayout.getTabCount(),productDescription,productOtherDetails,productSpecificationModelList));
 
                     if((boolean)documentSnapshot.get("COD")){
                         codIndicator.setVisibility(View.VISIBLE);
@@ -216,7 +216,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
             }
         });
 
-        productDetailsViewpager.setAdapter(new ProductDetailsAdapter(getSupportFragmentManager(),productDetailsTabLayout.getTabCount()));
         productDetailsViewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(productDetailsTabLayout));
 
         productDetailsTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
