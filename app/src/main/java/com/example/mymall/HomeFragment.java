@@ -40,9 +40,10 @@ import java.util.TimerTask;
 
 import static com.example.mymall.DBqueries.categoryModelList;
 import static com.example.mymall.DBqueries.firebaseFirestore;
-import static com.example.mymall.DBqueries.homePageModelList;
+import static com.example.mymall.DBqueries.lists;
 import static com.example.mymall.DBqueries.loadCategories;
 import static com.example.mymall.DBqueries.loadFragmentData;
+import static com.example.mymall.DBqueries.loadedCategoriesNames;
 
 
 /**
@@ -155,15 +156,17 @@ public class HomeFragment extends Fragment {
 //        homePageModelList.add(new HomePageModel(2,"Deals of the day",horizontalProductScrollModelList));
 //        homePageModelList.add(new HomePageModel(1,R.mipmap.banner,"#000000"));
 
-            adapter = new HomePageAdapter(homePageModelList);
-            homePageRecyclerView.setAdapter(adapter);
-
-            if (homePageModelList.size() == 0) {
-
-                loadFragmentData(adapter, getContext());
+            if (lists.size() == 0) {
+                loadedCategoriesNames.add("HOME");
+                lists.add(new ArrayList<HomePageModel>());
+                adapter = new HomePageAdapter(lists.get(0));
+                loadFragmentData(adapter, getContext(),0,"HOME");
             } else {
+                adapter = new HomePageAdapter(lists.get(0));
                 categoryAdapter.notifyDataSetChanged();
             }
+            homePageRecyclerView.setAdapter(adapter);
+
 
             ///////////////////test
 

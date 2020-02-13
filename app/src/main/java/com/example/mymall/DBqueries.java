@@ -18,7 +18,15 @@ public class DBqueries {
 
     public static FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     public static List<CategoryModel> categoryModelList = new ArrayList<>();
-    public  static List<HomePageModel> homePageModelList = new ArrayList<>();
+
+    // dekh abhi yaha pr list of list banaya h, jitni bhi categories h ,
+    // unn sabki list ko hum yaha pr dalenge
+    public static List<List<HomePageModel>> lists = new ArrayList<>();
+
+    // ye list me jo bhi upar ki list hogi unka naam yaha store karenge
+    // fir ye naam ka index kya h
+    // then wo index ka use krke , wo particular catefory ki list apan ko milegi
+    public static List<String> loadedCategoriesNames = new ArrayList<>();
 
 
     public static void loadCategories(final CategoryAdapter categoryAdapter, final Context context){
@@ -41,10 +49,10 @@ public class DBqueries {
                 });
     }
 
-    public static void loadFragmentData(final HomePageAdapter adapter, final Context context){
+    public static void loadFragmentData(final HomePageAdapter adapter, final Context context, final int index, String categoryName){
 
         firebaseFirestore.collection("CATEGORIES")
-                .document("HOME")
+                .document(categoryName.toUpperCase())
                 .collection("TOP_DEALS").orderBy("index")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -63,11 +71,11 @@ public class DBqueries {
                                         sliderModelList.add(new SliderModel(documentSnapshot.get("banner_"+x).toString(),
                                                 documentSnapshot.get("banner_"+x+"_background").toString()));
                                     }
-                                    homePageModelList.add(new HomePageModel(0,sliderModelList));
+                                    lists.get(index).add(new HomePageModel(0,sliderModelList));
                                 }
 
                                 else if((long) documentSnapshot.get("view_type") == 1){
-                                    homePageModelList.add(new HomePageModel(1,documentSnapshot.get("strip_ad_banner").toString(),
+                                    lists.get(index).add(new HomePageModel(1,documentSnapshot.get("strip_ad_banner").toString(),
                                             documentSnapshot.get("background").toString()));
                                 }
                                 else if((long) documentSnapshot.get("view_type") == 2){
@@ -98,7 +106,7 @@ public class DBqueries {
                                                 (boolean)documentSnapshot.get("COD_"+x)));
 
                                     }
-                                    homePageModelList.add(new HomePageModel(2,documentSnapshot.get("layout_title").toString(),
+                                    lists.get(index).add(new HomePageModel(2,documentSnapshot.get("layout_title").toString(),
                                             documentSnapshot.get("layout_background").toString(),horizontalProductScrollModelList,viewAllProductList));
                                 }
                                 else if((long) documentSnapshot.get("view_type") == 3){
@@ -113,7 +121,7 @@ public class DBqueries {
                                                 documentSnapshot.get("product_subtitle_"+x).toString(),
                                                 documentSnapshot.get("product_price_"+x).toString()));
                                     }
-                                    homePageModelList.add(new HomePageModel(3,documentSnapshot.get("layout_title").toString(),
+                                    lists.get(index).add(new HomePageModel(3,documentSnapshot.get("layout_title").toString(),
                                             documentSnapshot.get("layout_background").toString(),GridLayoutModelList));
                                 }
 
