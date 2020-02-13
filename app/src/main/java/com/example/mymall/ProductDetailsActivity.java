@@ -134,6 +134,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                         productDetailsOnlyContainer.setVisibility(View.GONE);
 
                         ProductDescriptionFragment.productDescription = documentSnapshot.get("product_description").toString();
+                        ProductSpecificationFragment.productSpecificationModelList = new ArrayList<>();
                     }
                     else{
                         productDetailsTabsContainer.setVisibility(View.GONE);

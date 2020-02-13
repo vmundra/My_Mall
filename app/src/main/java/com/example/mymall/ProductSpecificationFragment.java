@@ -21,6 +21,7 @@ import java.util.List;
 public class ProductSpecificationFragment extends Fragment {
 
     private RecyclerView productSpecificationRecyclerView;
+    public static List<ProductSpecificationModel> productSpecificationModelList;
 
     public ProductSpecificationFragment() {
         // Required empty public constructor
@@ -37,21 +38,21 @@ public class ProductSpecificationFragment extends Fragment {
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         productSpecificationRecyclerView.setLayoutManager(linearLayoutManager);
 
-        List<ProductSpecificationModel> productSpecificationModelList = new ArrayList<>();
-        productSpecificationModelList.add(new ProductSpecificationModel(0,"General"));
-        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
-        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
-        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
-        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
-        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
 
-        productSpecificationModelList.add(new ProductSpecificationModel(0,"Display"));
-        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
-        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
-        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
-        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
-        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
-        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
+//        productSpecificationModelList.add(new ProductSpecificationModel(0,"General"));
+//        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
+//        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
+//        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
+//        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
+//        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
+//
+//        productSpecificationModelList.add(new ProductSpecificationModel(0,"Display"));
+//        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
+//        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
+//        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
+//        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
+//        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
+//        productSpecificationModelList.add(new ProductSpecificationModel(1,"RAM","8gb"));
 
 
 
