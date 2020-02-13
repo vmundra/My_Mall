@@ -2,20 +2,31 @@ package com.example.mymall;
 
 public class WishlistModel {
 
-    private int productImage;
+    private String productImage;
     private String productTitle;
-    private int freeCoupens;
+    private long freeCoupens;
     private String rating;
-    private int totalRatings;
+    private long totalRatings;
     private String productPrice;
     private String cuttedPrice;
-    private String paymentMethod;
+    private boolean COD;
 
-    public int getProductImage() {
+    public WishlistModel(String productImage, String productTitle, long freeCoupens, String rating, long totalRatings, String productPrice, String cuttedPrice, boolean COD) {
+        this.productImage = productImage;
+        this.productTitle = productTitle;
+        this.freeCoupens = freeCoupens;
+        this.rating = rating;
+        this.totalRatings = totalRatings;
+        this.productPrice = productPrice;
+        this.cuttedPrice = cuttedPrice;
+        this.COD = COD;
+    }
+
+    public String getProductImage() {
         return productImage;
     }
 
-    public void setProductImage(int productImage) {
+    public void setProductImage(String productImage) {
         this.productImage = productImage;
     }
 
@@ -27,11 +38,11 @@ public class WishlistModel {
         this.productTitle = productTitle;
     }
 
-    public int getFreeCoupens() {
+    public long getFreeCoupens() {
         return freeCoupens;
     }
 
-    public void setFreeCoupens(int freeCoupens) {
+    public void setFreeCoupens(long freeCoupens) {
         this.freeCoupens = freeCoupens;
     }
 
@@ -43,11 +54,11 @@ public class WishlistModel {
         this.rating = rating;
     }
 
-    public int getTotalRatings() {
+    public long getTotalRatings() {
         return totalRatings;
     }
 
-    public void setTotalRatings(int totalRatings) {
+    public void setTotalRatings(long totalRatings) {
         this.totalRatings = totalRatings;
     }
 
@@ -67,22 +78,11 @@ public class WishlistModel {
         this.cuttedPrice = cuttedPrice;
     }
 
-    public String getPaymentMethod() {
-        return paymentMethod;
+    public boolean isCOD() {
+        return COD;
     }
 
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
-    public WishlistModel(int productImage, String productTitle, int freeCoupens, String rating, int totalRatings, String productPrice, String cuttedPrice, String paymentMethod) {
-        this.productImage = productImage;
-        this.productTitle = productTitle;
-        this.freeCoupens = freeCoupens;
-        this.rating = rating;
-        this.totalRatings = totalRatings;
-        this.productPrice = productPrice;
-        this.cuttedPrice = cuttedPrice;
-        this.paymentMethod = paymentMethod;
+    public void setCOD(boolean COD) {
+        this.COD = COD;
     }
 }

@@ -56,8 +56,27 @@ public class HomePageModel {
     ///////////////////////////////HORIZONTAL_PRODUCT &&& GRID_PRODUCT_VIEW
     private String title;
     private List<HorizontalProductScrollModel> horizontalProductScrollModelList;
+    private List<WishlistModel> viewAllProductList;
 
-    public HomePageModel(int type, String title,String backgroundColor ,List<HorizontalProductScrollModel> horizontalProductScrollModelList) {
+    /// ye wala constructor view all btn pr click krne ke baad recycler view me products ko show krne ke liye h
+    public HomePageModel(int type, String title,String backgroundColor ,List<HorizontalProductScrollModel> horizontalProductScrollModelList,List<WishlistModel> viewAllProductList) {
+        this.type = type;
+        this.title = title;
+        this.backgroundColor = backgroundColor;
+        this.horizontalProductScrollModelList = horizontalProductScrollModelList;
+        this.viewAllProductList = viewAllProductList;
+    }
+
+    public List<WishlistModel> getViewAllProductList() {
+        return viewAllProductList;
+    }
+
+    public void setViewAllProductList(List<WishlistModel> viewAllProductList) {
+        this.viewAllProductList = viewAllProductList;
+    }
+
+    ///// ye wala apne home page me horizontal way me products show krne ke liye h
+    public HomePageModel(int type, String title, String backgroundColor , List<HorizontalProductScrollModel> horizontalProductScrollModelList) {
         this.type = type;
         this.title = title;
         this.backgroundColor = backgroundColor;

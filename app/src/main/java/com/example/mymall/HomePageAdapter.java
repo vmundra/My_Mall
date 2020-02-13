@@ -104,7 +104,8 @@ public class HomePageAdapter extends RecyclerView.Adapter {
                 String horizontalLayoutTitle = homePageModelList.get(position).getTitle();
                 List<HorizontalProductScrollModel> horizontalProductScrollModelList = homePageModelList.get(position).getHorizontalProductScrollModelList();
                 String layoutColor = homePageModelList.get(position).getBackgroundColor();
-                ((HorizontalProductViewholder)viewHolder).setHorizontalProductLayout(horizontalLayoutTitle, horizontalProductScrollModelList,layoutColor);
+                List<WishlistModel> viewAllProductList = homePageModelList.get(position).getViewAllProductList();
+                ((HorizontalProductViewholder)viewHolder).setHorizontalProductLayout(horizontalLayoutTitle, horizontalProductScrollModelList,layoutColor,viewAllProductList);
                 break;
 
             case HomePageModel.GRID_PRODUCT_VIEW:
@@ -272,7 +273,7 @@ public class HomePageAdapter extends RecyclerView.Adapter {
             horizontalRecyclerView.setRecycledViewPool(recycledViewPool);
         }
 
-        private void setHorizontalProductLayout(String title,List<HorizontalProductScrollModel> horizontalProductScrollModelList,String color) {
+        private void setHorizontalProductLayout(final String title, List<HorizontalProductScrollModel> horizontalProductScrollModelList, String color, final List<WishlistModel> viewAllProductList) {
             container.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(color)));
             horizontalLayoutTitle.setText(title);
 
@@ -281,8 +282,11 @@ public class HomePageAdapter extends RecyclerView.Adapter {
                 horizontalLayoutviewAllBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        ViewAllActivity.wishlistModelList = viewAllProductList;
+
                         Intent viewAllIntent = new Intent(itemView.getContext(),ViewAllActivity.class);
                         viewAllIntent.putExtra("layout_code",0);
+                        viewAllIntent.putExtra("title",title);
                         itemView.getContext().startActivity(viewAllIntent);
                     }
                 });

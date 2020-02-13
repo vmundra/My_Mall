@@ -19,6 +19,7 @@ public class ViewAllActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private GridView gridView;
     public static List<HorizontalProductScrollModel> horizontalProductScrollModelList;
+    public static List<WishlistModel> wishlistModelList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,18 +44,6 @@ public class ViewAllActivity extends AppCompatActivity {
             layoutManager.setOrientation(RecyclerView.VERTICAL);
             recyclerView.setLayoutManager(layoutManager);
 
-            List<WishlistModel> wishlistModelList = new ArrayList<>();
-            wishlistModelList.add(new WishlistModel(R.mipmap.image2, "Pixel 3(Mate Black)", 3, "2", 256, "Rs.49,999/-", "Rs.59,999/-", "Cash On Delivery"));
-            wishlistModelList.add(new WishlistModel(R.mipmap.image2, "Poco 3(Mate Black)", 0, "2", 256, "Rs.49,999/-", "Rs.59,999/-", "Cash On Delivery"));
-            wishlistModelList.add(new WishlistModel(R.mipmap.image2, "Xoamoi 3(Mate Black)", 5, "2", 256, "Rs.49,999/-", "Rs.59,999/-", "Cash On Delivery"));
-            wishlistModelList.add(new WishlistModel(R.mipmap.image2, "Pixel 3(Mate Black)", 1, "2", 256, "Rs.49,999/-", "Rs.59,999/-", "Cash On Delivery"));
-            wishlistModelList.add(new WishlistModel(R.mipmap.image2, "Pixel 3(Mate Black)", 0, "2", 256, "Rs.49,999/-", "Rs.59,999/-", "Cash On Delivery"));
-            wishlistModelList.add(new WishlistModel(R.mipmap.image2, "Pixel 3(Mate Black)", 3, "2", 256, "Rs.49,999/-", "Rs.59,999/-", "Cash On Delivery"));
-            wishlistModelList.add(new WishlistModel(R.mipmap.image2, "Pixel 3(Mate Black)", 3, "2", 256, "Rs.49,999/-", "Rs.59,999/-", "Cash On Delivery"));
-            wishlistModelList.add(new WishlistModel(R.mipmap.image2, "Pixel 3(Mate Black)", 3, "2", 256, "Rs.49,999/-", "Rs.59,999/-", "Cash On Delivery"));
-            wishlistModelList.add(new WishlistModel(R.mipmap.image2, "Pixel 3(Mate Black)", 3, "2", 256, "Rs.49,999/-", "Rs.59,999/-", "Cash On Delivery"));
-            wishlistModelList.add(new WishlistModel(R.mipmap.image2, "Pixel 3(Mate Black)", 3, "2", 256, "Rs.49,999/-", "Rs.59,999/-", "Cash On Delivery"));
-            wishlistModelList.add(new WishlistModel(R.mipmap.image2, "Pixel 3(Mate Black)", 3, "2", 256, "Rs.49,999/-", "Rs.59,999/-", "Cash On Delivery"));
 
             WishlistAdapter adapter = new WishlistAdapter(wishlistModelList, false);
             recyclerView.setAdapter(adapter);

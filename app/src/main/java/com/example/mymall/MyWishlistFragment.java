@@ -39,12 +39,6 @@ public class MyWishlistFragment extends Fragment {
         wishlistRecyclerView.setLayoutManager(linearLayoutManager);
 
         List<WishlistModel> wishlistModelList = new ArrayList<>();
-        wishlistModelList.add(new WishlistModel(R.mipmap.image2,"Pixel 3(Mate Black)",3,"2",256,"Rs.49,999/-","Rs.59,999/-","Cash On Delivery"));
-        wishlistModelList.add(new WishlistModel(R.mipmap.image2,"Poco 3(Mate Black)",0,"2",256,"Rs.49,999/-","Rs.59,999/-","Cash On Delivery"));
-        wishlistModelList.add(new WishlistModel(R.mipmap.image2,"Xoamoi 3(Mate Black)",5,"2",256,"Rs.49,999/-","Rs.59,999/-","Cash On Delivery"));
-        wishlistModelList.add(new WishlistModel(R.mipmap.image2,"Pixel 3(Mate Black)",1,"2",256,"Rs.49,999/-","Rs.59,999/-","Cash On Delivery"));
-        wishlistModelList.add(new WishlistModel(R.mipmap.image2,"Pixel 3(Mate Black)",0,"2",256,"Rs.49,999/-","Rs.59,999/-","Cash On Delivery"));
-        wishlistModelList.add(new WishlistModel(R.mipmap.image2,"Pixel 3(Mate Black)",3,"2",256,"Rs.49,999/-","Rs.59,999/-","Cash On Delivery"));
 
         WishlistAdapter wishlistAdapter = new WishlistAdapter(wishlistModelList,true);
         wishlistRecyclerView.setAdapter(wishlistAdapter);
