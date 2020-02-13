@@ -3,6 +3,7 @@ package com.example.mymall;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
@@ -20,9 +21,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,19 +42,30 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private FloatingActionButton addToWishListBtn;
     private Button coupenRedeemBtn;
     private static boolean ALREADY_ADDED_TO_WISHLIST = false;
+    List<String> productImages;
+
+    private FirebaseFirestore firebaseFirestore;
 
     private Button buyNowBtn;
 
     //////////////////////coupenDialog
-    public static TextView coupenTitle;
-    public static TextView coupenBody;
-    public static TextView coupenExpiryDate;
+    public static TextView coupenTitle, tvCodIndicator,rewardTitle, rewardBody;
+    public static TextView coupenBody, productPrice, cuttedPrice;
+    private ImageView codIndicator;
+    public static TextView coupenExpiryDate, productTitle, averageRatingMiniview, totalRatingMiniView;
     private static RecyclerView coupensRecyclerView;
     private static LinearLayout selectedCoupen;
     //////////////////////coupenDialog
 
+
+    ///////////////////////////product description
+    private ConstraintLayout productDetailsOnlyContainer;
+    private ConstraintLayout productDetailsTabsContainer;
     private ViewPager productDetailsViewpager;
     private TabLayout productDetailsTabLayout;
+
+    ///////////////////////////product description
+
 
     /////////////////rating layout
     private LinearLayout rateNowContainer;
@@ -69,18 +86,76 @@ public class ProductDetailsActivity extends AppCompatActivity {
         addToWishListBtn = findViewById(R.id.add_to_wishlist_btn);
         buyNowBtn = findViewById(R.id.buy_now_btn);
         coupenRedeemBtn = findViewById(R.id.coupen_redemption_btn);
+        productTitle = findViewById(R.id.product_title);
+        averageRatingMiniview = findViewById(R.id.tv_product_rating_miniview);
+        totalRatingMiniView = findViewById(R.id.total_ratings_miniview);
+        productPrice = findViewById(R.id.product_price);
+        cuttedPrice = findViewById(R.id.cutted_price);
+        codIndicator = findViewById(R.id.cod_indicator_imageview);
+        tvCodIndicator = findViewById(R.id.tv_cod_indicator);
+        rewardTitle = findViewById(R.id.reward_title);
+        rewardBody = findViewById(R.id.reward_body);
+
+        productDetailsTabsContainer = findViewById(R.id.product_details_tabs_container);
+        productDetailsOnlyContainer = findViewById(R.id.product_details_container);
+
+        firebaseFirestore = FirebaseFirestore.getInstance();
 
         productDetailsViewpager = findViewById(R.id.product_details_viewpager);
         productDetailsTabLayout = findViewById(R.id.product_details_tablayout);
 
-        List<Integer> productImages = new ArrayList<>();
-        productImages.add(R.mipmap.profile_placeholder);
-        productImages.add(R.mipmap.image2);
-        productImages.add(R.mipmap.logo);
-        productImages.add(R.mipmap.banner);
+        productImages = new ArrayList<>();
 
-        ProductImagesAdapter productImagesAdapter = new ProductImagesAdapter(productImages);
-        productImagesViewPager.setAdapter(productImagesAdapter);
+
+        firebaseFirestore.collection("PRODUCTS").document("KzFEqfOLg8xqHeNMygrK")
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+
+                    DocumentSnapshot documentSnapshot = task.getResult();
+
+                    for(long x = 1; x< (long)documentSnapshot.get("no_of_product_images")+1;x++){
+
+                        productImages.add(documentSnapshot.get("product_image_"+x).toString());
+                    }
+                    ProductImagesAdapter productImagesAdapter = new ProductImagesAdapter(productImages);
+                    productImagesViewPager.setAdapter(productImagesAdapter);
+                    productTitle.setText(documentSnapshot.get("product_title").toString());
+                    averageRatingMiniview.setText(documentSnapshot.get("average_rating").toString());
+                    totalRatingMiniView.setText("("+(long)documentSnapshot.get("total_ratings")+") ratings");
+                    productPrice.setText("Rs."+documentSnapshot.get("product_price").toString()+"/-");
+                    cuttedPrice.setText("Rs."+documentSnapshot.get("cutted_price").toString()+"/-");
+                    rewardTitle.setText(documentSnapshot.get("free_coupens")+" "+documentSnapshot.get("free_coupen_title").toString());
+                    rewardBody.setText(documentSnapshot.get("free_coupen_body").toString());
+
+                    if((boolean)documentSnapshot.get("use_tab_layout")){
+                        productDetailsTabsContainer.setVisibility(View.VISIBLE);
+                        productDetailsOnlyContainer.setVisibility(View.GONE);
+
+                        ProductDescriptionFragment.productDescription = documentSnapshot.get("product_description").toString();
+                    }
+                    else{
+                        productDetailsTabsContainer.setVisibility(View.GONE);
+                        productDetailsOnlyContainer.setVisibility(View.VISIBLE);
+                    }
+
+                    if((boolean)documentSnapshot.get("COD")){
+                        codIndicator.setVisibility(View.VISIBLE);
+                        tvCodIndicator.setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        codIndicator.setVisibility(View.INVISIBLE);
+                        tvCodIndicator.setVisibility(View.INVISIBLE);
+                    }
+                }
+                else{
+                    String error = task.getException().getMessage();
+                    Toast.makeText(ProductDetailsActivity.this, error, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
 
         viewpagerIndicator.setupWithViewPager(productImagesViewPager,true);
 
