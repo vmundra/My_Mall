@@ -37,7 +37,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         String icon = categoryModelList.get(position).getCategoryIconLink();
         String name = categoryModelList.get(position).getCategoryName();
         viewHolder.setCategoryIcon(icon);
-        viewHolder.setCategory(name,position);
+        viewHolder.setCategory(name, position);
     }
 
     @Override
@@ -69,22 +69,24 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         private void setCategory(final String name, final int position) {
             categoryName.setText(name);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            if (!name.equals("")) {
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-                    if (position != 0) {
+                        if (position != 0) {
 
-                        Intent categoryIntent = new Intent(itemView.getContext(), CategoryActivity.class);
-                        // kyuki hum chahte h ki user jab koi category pr click karega to wo uss category me to jayega hi
-                        // but usko waha usss category ka naam bhi dikhega.....isliye name bhi pass karenge
+                            Intent categoryIntent = new Intent(itemView.getContext(), CategoryActivity.class);
+                            // kyuki hum chahte h ki user jab koi category pr click karega to wo uss category me to jayega hi
+                            // but usko waha usss category ka naam bhi dikhega.....isliye name bhi pass karenge
 
-                        categoryIntent.putExtra("CategoryName", name);
-                        itemView.getContext().startActivity(categoryIntent);
+                            categoryIntent.putExtra("CategoryName", name);
+                            itemView.getContext().startActivity(categoryIntent);
 
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     }
 
