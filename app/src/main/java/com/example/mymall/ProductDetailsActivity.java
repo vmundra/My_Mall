@@ -34,7 +34,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.mymall.DBqueries.currentUser;
 import static com.example.mymall.MainActivity.showCart;
+import static com.example.mymall.RegisterActivity.setSignUpFragment;
 
 public class ProductDetailsActivity extends AppCompatActivity {
 
@@ -48,9 +50,10 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private FirebaseFirestore firebaseFirestore;
 
     private Button buyNowBtn;
+    private LinearLayout addToCartButton;
 
     //////////////////////coupenDialog
-    public static TextView coupenTitle, tvCodIndicator,rewardTitle, rewardBody;
+    public static TextView coupenTitle, tvCodIndicator, rewardTitle, rewardBody;
     public static TextView coupenBody, productPrice, cuttedPrice;
     private ImageView codIndicator;
     public static TextView coupenExpiryDate, productTitle, averageRatingMiniview, totalRatingMiniView;
@@ -65,7 +68,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private ConstraintLayout productDetailsTabsContainer;
     private ViewPager productDetailsViewpager;
     private TabLayout productDetailsTabLayout;
-    private String productDescription,productOtherDetails;
+    private String productDescription, productOtherDetails;
     private int tabPosition = -1;
 
     private List<ProductSpecificationModel> productSpecificationModelList = new ArrayList<>();
@@ -79,6 +82,9 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private LinearLayout ratingsNoContainer;
     private LinearLayout ratingsPrgressBarContainer;
     /////////////////rating layout
+    private Dialog signInDialog;
+    private LinearLayout coupenRedemptionLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +110,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         tvCodIndicator = findViewById(R.id.tv_cod_indicator);
         rewardTitle = findViewById(R.id.reward_title);
         rewardBody = findViewById(R.id.reward_body);
+        coupenRedemptionLayout = findViewById(R.id.coupon_redemption_layout);
 
         productDetailsTabsContainer = findViewById(R.id.product_details_tabs_container);
         productDetailsOnlyContainer = findViewById(R.id.product_details_container);
@@ -117,6 +124,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         ratingsNoContainer = findViewById(R.id.ratings_numbers_container);
         totalRatingsFigure = findViewById(R.id.total_ratings_figure);
         ratingsPrgressBarContainer = findViewById(R.id.ratings_progressbar_container);
+        addToCartButton = findViewById(R.id.add_to_cart_btn);
 
         productImages = new ArrayList<>();
 
@@ -125,77 +133,74 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
 
                     DocumentSnapshot documentSnapshot = task.getResult();
 
-                    for(long x = 1; x< (long)documentSnapshot.get("no_of_product_images")+1;x++){
+                    for (long x = 1; x < (long) documentSnapshot.get("no_of_product_images") + 1; x++) {
 
-                        productImages.add(documentSnapshot.get("product_image_"+x).toString());
+                        productImages.add(documentSnapshot.get("product_image_" + x).toString());
                     }
                     ProductImagesAdapter productImagesAdapter = new ProductImagesAdapter(productImages);
                     productImagesViewPager.setAdapter(productImagesAdapter);
                     productTitle.setText(documentSnapshot.get("product_title").toString());
                     averageRatingMiniview.setText(documentSnapshot.get("average_rating").toString());
-                    totalRatingMiniView.setText("("+(long)documentSnapshot.get("total_ratings")+") ratings");
-                    productPrice.setText("Rs."+documentSnapshot.get("product_price").toString()+"/-");
-                    cuttedPrice.setText("Rs."+documentSnapshot.get("cutted_price").toString()+"/-");
-                    rewardTitle.setText(documentSnapshot.get("free_coupens")+" "+documentSnapshot.get("free_coupen_title").toString());
+                    totalRatingMiniView.setText("(" + (long) documentSnapshot.get("total_ratings") + ") ratings");
+                    productPrice.setText("Rs." + documentSnapshot.get("product_price").toString() + "/-");
+                    cuttedPrice.setText("Rs." + documentSnapshot.get("cutted_price").toString() + "/-");
+                    rewardTitle.setText(documentSnapshot.get("free_coupens") + " " + documentSnapshot.get("free_coupen_title").toString());
                     rewardBody.setText(documentSnapshot.get("free_coupen_body").toString());
 
-                    if((boolean)documentSnapshot.get("use_tab_layout")){
+                    if ((boolean) documentSnapshot.get("use_tab_layout")) {
                         productDetailsTabsContainer.setVisibility(View.VISIBLE);
                         productDetailsOnlyContainer.setVisibility(View.GONE);
 
                         productDescription = documentSnapshot.get("product_description").toString();
                         productOtherDetails = documentSnapshot.get("product_other_details").toString();
 
-                        for (long x =1; x< (long)documentSnapshot.get("total_specification_titles")+1;x++){
+                        for (long x = 1; x < (long) documentSnapshot.get("total_specification_titles") + 1; x++) {
 
-                           productSpecificationModelList.add(new ProductSpecificationModel(0,
-                                    documentSnapshot.get("specification_title_"+x).toString()));
+                            productSpecificationModelList.add(new ProductSpecificationModel(0,
+                                    documentSnapshot.get("specification_title_" + x).toString()));
 
 
-                            for(long m = 1;m<(long)documentSnapshot.get("specification_title_"+x+"_total_fields")+1;m++){
-                               productSpecificationModelList.add(new ProductSpecificationModel(1,
-                                        documentSnapshot.get("specification_title_"+x+"_field_"+m+"_name").toString(),
-                                        documentSnapshot.get("specification_title_"+x+"_field_"+m+"_value").toString()));
+                            for (long m = 1; m < (long) documentSnapshot.get("specification_title_" + x + "_total_fields") + 1; m++) {
+                                productSpecificationModelList.add(new ProductSpecificationModel(1,
+                                        documentSnapshot.get("specification_title_" + x + "_field_" + m + "_name").toString(),
+                                        documentSnapshot.get("specification_title_" + x + "_field_" + m + "_value").toString()));
                             }
                         }
-                    }
-                    else{
+                    } else {
                         productDetailsTabsContainer.setVisibility(View.GONE);
                         productDetailsOnlyContainer.setVisibility(View.VISIBLE);
                         productOnlyDescriptionBody.setText(documentSnapshot.get("product_description").toString());
                     }
-                    totalRatings.setText((long)documentSnapshot.get("total_ratings")+" ratings");
+                    totalRatings.setText((long) documentSnapshot.get("total_ratings") + " ratings");
 
-                    for(int x = 0; x<5;x++){
+                    for (int x = 0; x < 5; x++) {
                         TextView rating = (TextView) ratingsNoContainer.getChildAt(x);
 
                         // to yaha pr ye rating actually wo ratings ke main container, parent samajh le,
                         // usko access krta h and uske 5 children ko access krke unka text set krta h..... :)
-                        rating.setText(String.valueOf((long)documentSnapshot.get((5-x)+"_star")));
+                        rating.setText(String.valueOf((long) documentSnapshot.get((5 - x) + "_star")));
 
                         ProgressBar progressBar = (ProgressBar) ratingsPrgressBarContainer.getChildAt(x);
-                        int maxProgress = Integer.parseInt(String.valueOf((long)documentSnapshot.get("total_ratings")));
+                        int maxProgress = Integer.parseInt(String.valueOf((long) documentSnapshot.get("total_ratings")));
                         progressBar.setMax(maxProgress);
-                        progressBar.setProgress(Integer.parseInt(String.valueOf((long)documentSnapshot.get((5-x)+"_star"))));
+                        progressBar.setProgress(Integer.parseInt(String.valueOf((long) documentSnapshot.get((5 - x) + "_star"))));
 
                     }
-                    totalRatingsFigure.setText(String.valueOf((long)documentSnapshot.get("total_ratings")));
-                    productDetailsViewpager.setAdapter(new ProductDetailsAdapter(getSupportFragmentManager(),productDetailsTabLayout.getTabCount(),productDescription,productOtherDetails,productSpecificationModelList));
+                    totalRatingsFigure.setText(String.valueOf((long) documentSnapshot.get("total_ratings")));
+                    productDetailsViewpager.setAdapter(new ProductDetailsAdapter(getSupportFragmentManager(), productDetailsTabLayout.getTabCount(), productDescription, productOtherDetails, productSpecificationModelList));
 
-                    if((boolean)documentSnapshot.get("COD")){
+                    if ((boolean) documentSnapshot.get("COD")) {
                         codIndicator.setVisibility(View.VISIBLE);
                         tvCodIndicator.setVisibility(View.VISIBLE);
-                    }
-                    else{
+                    } else {
                         codIndicator.setVisibility(View.INVISIBLE);
                         tvCodIndicator.setVisibility(View.INVISIBLE);
                     }
-                }
-                else{
+                } else {
                     String error = task.getException().getMessage();
                     Toast.makeText(ProductDetailsActivity.this, error, Toast.LENGTH_SHORT).show();
                 }
@@ -203,18 +208,22 @@ public class ProductDetailsActivity extends AppCompatActivity {
         });
 
 
-        viewpagerIndicator.setupWithViewPager(productImagesViewPager,true);
+        viewpagerIndicator.setupWithViewPager(productImagesViewPager, true);
 
         addToWishListBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(ALREADY_ADDED_TO_WISHLIST == true){
-                    ALREADY_ADDED_TO_WISHLIST = false;
-                    addToWishListBtn.setSupportImageTintList(ColorStateList.valueOf(Color.parseColor("#9e9e9e")));
-                }
-                else{
-                    ALREADY_ADDED_TO_WISHLIST = true;
-                    addToWishListBtn.setSupportImageTintList(getResources().getColorStateList(R.color.colorPrimary));
+
+                if (currentUser == null) {
+                    signInDialog.show();
+                } else {
+                    if (ALREADY_ADDED_TO_WISHLIST == true) {
+                        ALREADY_ADDED_TO_WISHLIST = false;
+                        addToWishListBtn.setSupportImageTintList(ColorStateList.valueOf(Color.parseColor("#9e9e9e")));
+                    } else {
+                        ALREADY_ADDED_TO_WISHLIST = true;
+                        addToWishListBtn.setSupportImageTintList(getResources().getColorStateList(R.color.colorPrimary));
+                    }
                 }
             }
         });
@@ -242,12 +251,16 @@ public class ProductDetailsActivity extends AppCompatActivity {
         /////////////////rating layout
         rateNowContainer = findViewById(R.id.rate_now_container);
 
-        for(int x =0; x<rateNowContainer.getChildCount(); x++){
+        for (int x = 0; x < rateNowContainer.getChildCount(); x++) {
             final int starPosition = x;
             rateNowContainer.getChildAt(x).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    setRating(starPosition);
+                    if (currentUser == null) {
+                        signInDialog.show();
+                    } else {
+                        setRating(starPosition);
+                    }
                 }
             });
         }
@@ -256,16 +269,33 @@ public class ProductDetailsActivity extends AppCompatActivity {
         buyNowBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent deliveryIntent = new Intent(ProductDetailsActivity.this,DeliveryActivity.class);
-                startActivity(deliveryIntent);
+                if (currentUser == null) {
+                    signInDialog.show();
+                } else {
+                    Intent deliveryIntent = new Intent(ProductDetailsActivity.this, DeliveryActivity.class);
+                    startActivity(deliveryIntent);
+                }
             }
         });
+
+
+        addToCartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currentUser == null) {
+                    signInDialog.show();
+                } else {
+
+                }
+            }
+        });
+
 
         ///////////////////////////////coupen dialog
         final Dialog checkCoupenPriceDialog = new Dialog(ProductDetailsActivity.this);
         checkCoupenPriceDialog.setContentView(R.layout.coupen_reedem_dialog);
         checkCoupenPriceDialog.setCancelable(true);
-        checkCoupenPriceDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        checkCoupenPriceDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         ImageView toggleRecyclerView = checkCoupenPriceDialog.findViewById(R.id.toggle_recyclerview);
         coupensRecyclerView = checkCoupenPriceDialog.findViewById(R.id.coupens_recyclerview);
@@ -284,13 +314,13 @@ public class ProductDetailsActivity extends AppCompatActivity {
         coupensRecyclerView.setLayoutManager(layoutManager);
 
         List<RewardModel> rewardModelList = new ArrayList<>();
-        rewardModelList.add(new RewardModel("Cashback","till 2nd,June 2020","GET 30% OFF on all the elctronic products through Paytm"));
-        rewardModelList.add(new RewardModel("Discount","till 2nd,June 2020","GET 30% OFF on all the elctronic products through Paytm"));
-        rewardModelList.add(new RewardModel("Buy One get one free","till 2nd,June 2020","GET 30% OFF on all the elctronic products through Paytm"));
-        rewardModelList.add(new RewardModel("Casback","till 2nd,June 2020","GET 30% OFF on all the elctronic products through Paytm"));
-        rewardModelList.add(new RewardModel("Casback","till 2nd,June 2020","GET 30% OFF on all the elctronic products through Paytm"));
+        rewardModelList.add(new RewardModel("Cashback", "till 2nd,June 2020", "GET 30% OFF on all the elctronic products through Paytm"));
+        rewardModelList.add(new RewardModel("Discount", "till 2nd,June 2020", "GET 30% OFF on all the elctronic products through Paytm"));
+        rewardModelList.add(new RewardModel("Buy One get one free", "till 2nd,June 2020", "GET 30% OFF on all the elctronic products through Paytm"));
+        rewardModelList.add(new RewardModel("Casback", "till 2nd,June 2020", "GET 30% OFF on all the elctronic products through Paytm"));
+        rewardModelList.add(new RewardModel("Casback", "till 2nd,June 2020", "GET 30% OFF on all the elctronic products through Paytm"));
 
-        MyRewardsAdapter myRewardsAdapter = new MyRewardsAdapter(rewardModelList,true);
+        MyRewardsAdapter myRewardsAdapter = new MyRewardsAdapter(rewardModelList, true);
         coupensRecyclerView.setAdapter(myRewardsAdapter);
         myRewardsAdapter.notifyDataSetChanged();
 
@@ -309,28 +339,63 @@ public class ProductDetailsActivity extends AppCompatActivity {
             }
         });
 
+
+        signInDialog = new Dialog(ProductDetailsActivity.this);
+        signInDialog.setContentView(R.layout.sign_in_dialog);
+        signInDialog.setCancelable(true);
+        signInDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        Button dialogSignInBtn = signInDialog.findViewById(R.id.sign_in_btn);
+        Button dialogSignUpBtn = signInDialog.findViewById(R.id.sign_up_btn);
+        final Intent registerIntent = new Intent(ProductDetailsActivity.this, RegisterActivity.class);
+
+        dialogSignInBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SignInFragment.disableCloseBtn = true;
+                SignUpFragment.disableCloseBtn = true;
+                signInDialog.dismiss();
+                setSignUpFragment = false;
+                startActivity(registerIntent);
+            }
+        });
+
+        dialogSignUpBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SignUpFragment.disableCloseBtn = true;
+                SignInFragment.disableCloseBtn = true;
+                signInDialog.dismiss();
+                setSignUpFragment = true;
+                startActivity(registerIntent);
+            }
+        });
+
+        if(currentUser == null){
+         coupenRedemptionLayout.setVisibility(View.GONE);
+        }
+
     }
 
-    public static void showDialogRecyclerView(){
+    public static void showDialogRecyclerView() {
 
-        if(coupensRecyclerView.getVisibility() == View.GONE){
+        if (coupensRecyclerView.getVisibility() == View.GONE) {
             coupensRecyclerView.setVisibility(View.VISIBLE);
             selectedCoupen.setVisibility(View.GONE);
-        }
-        else{
+        } else {
             coupensRecyclerView.setVisibility(View.GONE);
             selectedCoupen.setVisibility(View.VISIBLE);
         }
     }
 
-    private void setRating(int starPosition){
+    private void setRating(int starPosition) {
 
-        for(int x = 0; x<rateNowContainer.getChildCount();x++){
+        for (int x = 0; x < rateNowContainer.getChildCount(); x++) {
 
-            ImageView starBtn = (ImageView)rateNowContainer.getChildAt(x);
+            ImageView starBtn = (ImageView) rateNowContainer.getChildAt(x);
             starBtn.setImageTintList(ColorStateList.valueOf(Color.parseColor("#bebebe")));
 
-            if(x <= starPosition){
+            if (x <= starPosition) {
                 starBtn.setImageTintList(ColorStateList.valueOf(Color.parseColor("#ffbb00")));
             }
         }
@@ -350,16 +415,20 @@ public class ProductDetailsActivity extends AppCompatActivity {
         // ye h top right side ke 3 items ke liye, unme se koi ek bhi selecct hua to uska code yaha h......
 
         int id = item.getItemId();
-        if(id == R.id.main_search_icon){
+        if (id == R.id.main_search_icon) {
             return true;
-        }
-        else if(id == R.id.main_cart_icon){
-            Intent cartIntent = new Intent(ProductDetailsActivity.this,MainActivity.class);
-            showCart = true;
-            startActivity(cartIntent);
-            return true;
-        }
-        else if(id == android.R.id.home){
+        } else if (id == R.id.main_cart_icon) {
+
+            if(currentUser==null){
+                signInDialog.show();
+            }
+            else {
+                Intent cartIntent = new Intent(ProductDetailsActivity.this, MainActivity.class);
+                showCart = true;
+                startActivity(cartIntent);
+                return true;
+            }
+        } else if (id == android.R.id.home) {
             finish();
             return true;
         }

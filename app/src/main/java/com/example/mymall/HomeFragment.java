@@ -234,6 +234,7 @@ public class HomeFragment extends Fragment {
         }
 
         else {
+            Toast.makeText(getContext(), "No Internet Connection!!!", Toast.LENGTH_SHORT).show();
             categoryRecyclerView.setVisibility(View.GONE);
             homePageRecyclerView.setVisibility(View.GONE);
             swipeRefreshLayout.setRefreshing(false);

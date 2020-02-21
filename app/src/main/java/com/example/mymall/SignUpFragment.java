@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -58,6 +59,7 @@ public class SignUpFragment extends Fragment {
     private Button signUpBtn;
 
     private ProgressBar progressBar;
+    public static boolean disableCloseBtn = false;
 
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
@@ -84,7 +86,13 @@ public class SignUpFragment extends Fragment {
         progressBar.setVisibility(View.INVISIBLE);
 
         firebaseFirestore = FirebaseFirestore.getInstance();
+        if(disableCloseBtn){
+            closeBtn.setVisibility(View.GONE);
+        }
+        else{
+            closeBtn.setVisibility(View.VISIBLE);
 
+        }
         return view;
     }
 
@@ -286,9 +294,14 @@ public class SignUpFragment extends Fragment {
 
     private void mainIntent(){
 
-        Intent mainIntent = new Intent(getActivity(),MainActivity.class);
-        startActivity(mainIntent);
-        getActivity().finish();
+        if(disableCloseBtn){
+            disableCloseBtn = false;
+        }
+        else {
+            Intent mainIntent = new Intent(getActivity(), MainActivity.class);
+            startActivity(mainIntent);
+            getActivity().finish();
+        }
     }
 }
 
