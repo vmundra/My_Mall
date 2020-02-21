@@ -28,13 +28,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.mymall.DBqueries.currentUser;
 import static com.example.mymall.MainActivity.showCart;
 import static com.example.mymall.RegisterActivity.setSignUpFragment;
 
@@ -44,6 +45,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private TabLayout viewpagerIndicator;
     private FloatingActionButton addToWishListBtn;
     private Button coupenRedeemBtn;
+    private FirebaseUser currentUser;
     private static boolean ALREADY_ADDED_TO_WISHLIST = false;
     List<String> productImages;
 
@@ -129,7 +131,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         productImages = new ArrayList<>();
 
 
-        firebaseFirestore.collection("PRODUCTS").document("KzFEqfOLg8xqHeNMygrK")
+        firebaseFirestore.collection("PRODUCTS").document(getIntent().getStringExtra("PRODUCT_ID"))
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -371,10 +373,19 @@ public class ProductDetailsActivity extends AppCompatActivity {
             }
         });
 
-        if(currentUser == null){
-         coupenRedemptionLayout.setVisibility(View.GONE);
-        }
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(currentUser == null){
+            coupenRedemptionLayout.setVisibility(View.GONE);
+        }
+        else{
+            coupenRedemptionLayout.setVisibility(View.VISIBLE);
+
+        }
     }
 
     public static void showDialogRecyclerView() {

@@ -22,8 +22,6 @@ public class DBqueries {
 
     public static FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     public static List<CategoryModel> categoryModelList = new ArrayList<>();
-    public static FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    public static FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 
     // dekh abhi yaha pr list of list banaya h, jitni bhi categories h ,
     // unn sabki list ko hum yaha pr dalenge

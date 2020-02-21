@@ -10,6 +10,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -142,6 +143,7 @@ public class HomeFragment extends Fragment {
         networkInfo = connectivityManager.getActiveNetworkInfo();
 
         if (networkInfo != null && networkInfo.isConnected() == true) {
+            MainActivity.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             categoryRecyclerView.setVisibility(View.VISIBLE);
             homePageRecyclerView.setVisibility(View.VISIBLE);
             noInternetConnection.setVisibility(View.GONE);
@@ -170,6 +172,7 @@ public class HomeFragment extends Fragment {
 
 
         } else {
+            MainActivity.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             categoryRecyclerView.setVisibility(View.GONE);
             homePageRecyclerView.setVisibility(View.GONE);
             Glide.with(this).load(R.drawable.no_internet_connection).into(noInternetConnection);
@@ -217,6 +220,7 @@ public class HomeFragment extends Fragment {
 
         if (networkInfo != null && networkInfo.isConnected() == true) {
 
+            MainActivity.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             noInternetConnection.setVisibility(View.GONE);
             retryButton.setVisibility(View.GONE);
             categoryRecyclerView.setVisibility(View.VISIBLE);
@@ -234,6 +238,7 @@ public class HomeFragment extends Fragment {
         }
 
         else {
+            MainActivity.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             Toast.makeText(getContext(), "No Internet Connection!!!", Toast.LENGTH_SHORT).show();
             categoryRecyclerView.setVisibility(View.GONE);
             homePageRecyclerView.setVisibility(View.GONE);

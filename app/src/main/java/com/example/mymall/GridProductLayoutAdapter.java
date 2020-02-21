@@ -40,7 +40,7 @@ public class GridProductLayoutAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, final ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
         View view;
 
         if(convertView == null){
@@ -53,6 +53,7 @@ public class GridProductLayoutAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Intent productDetailsIntent = new Intent(parent.getContext(),ProductDetailsActivity.class);
+                    productDetailsIntent.putExtra("PRODUCT_ID",horizontalProductScrollModelList.get(position).getProductId());
                     parent.getContext().startActivity(productDetailsIntent);
                 }
             });
