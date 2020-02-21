@@ -13,6 +13,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Handler;
@@ -52,10 +53,13 @@ import static com.example.mymall.DBqueries.loadedCategoriesNames;
 public class HomeFragment extends Fragment {
 
     private RecyclerView categoryRecyclerView;
+    private NetworkInfo networkInfo;
+    private ConnectivityManager connectivityManager;
     private CategoryAdapter categoryAdapter;
     private RecyclerView homePageRecyclerView;
     private HomePageAdapter adapter;
     private ImageView noInternetConnection;
+    public static SwipeRefreshLayout swipeRefreshLayout;
 
 
     public HomeFragment() {
@@ -71,9 +75,10 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         noInternetConnection = view.findViewById(R.id.no_internet_connection);
         categoryRecyclerView = view.findViewById(R.id.category_recyclerview);
+        swipeRefreshLayout = view.findViewById(R.id.refresh_layout);
 
-        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        networkInfo = connectivityManager.getActiveNetworkInfo();
 
         if (networkInfo != null && networkInfo.isConnected() == true) {
 
@@ -178,6 +183,45 @@ public class HomeFragment extends Fragment {
 
 
         ///////////////////////////////////////////////////////
+
+
+
+
+        ///////////////////////////refresh Layout
+
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(true);// isse hamara progress bar wo user ko visible ho jata h
+
+                    categoryModelList.clear();
+                    lists.clear();
+                    loadedCategoriesNames.clear();
+
+                if (networkInfo != null && networkInfo.isConnected() == true) {
+
+                    noInternetConnection.setVisibility(View.GONE);
+                    loadCategories(categoryAdapter, getContext());
+                    loadedCategoriesNames.add("HOME");
+                    lists.add(new ArrayList<HomePageModel>());
+                    loadFragmentData(adapter, getContext(),0,"HOME");
+                }
+                else {
+                    Glide.with(getContext()).load(R.drawable.no_internet_connection).into(noInternetConnection);
+                    noInternetConnection.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        ///////////////////////////refresh Layout
+
+
+
+
+
+
+
+
         return view;
     }
 //////////////////////////////////////////////////////////////
