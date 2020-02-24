@@ -1,5 +1,6 @@
 package com.example.mymall;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.widget.Toast;
 
@@ -149,18 +150,18 @@ public class DBqueries {
     }
 
 
-    public static void loadWishList(final Context context){
+    public static void loadWishList(final Context context, final Dialog dialog){
 
         firebaseFirestore.collection("USERS")
                 .document(FirebaseAuth.getInstance().getUid())
                 .collection("USER_DATA")
-                .document("MY_WISHLIT")
+                .document("MY_WISHLIST")
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
 
-                    for(long x=0;x<(long) task.getResult().get("list_size");x++){
+                    for(long x=0;x<(long)task.getResult().get("list_size");x++){
                         wishList.add(task.getResult().get("product_ID_"+x).toString());
                     }
                 }
@@ -168,6 +169,7 @@ public class DBqueries {
                     String error = task.getException().getMessage();
                     Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
                 }
+                dialog.dismiss();
             }
         });
     }

@@ -87,7 +87,9 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private LinearLayout ratingsNoContainer;
     private LinearLayout ratingsPrgressBarContainer;
     /////////////////rating layout
+
     private Dialog signInDialog;
+    private Dialog loadingDialog;
     private LinearLayout coupenRedemptionLayout;
 
 
@@ -131,6 +133,15 @@ public class ProductDetailsActivity extends AppCompatActivity {
         ratingsPrgressBarContainer = findViewById(R.id.ratings_progressbar_container);
         averageRating = findViewById(R.id.average_rating);
         addToCartButton = findViewById(R.id.add_to_cart_btn);
+
+        ///////////////loading dialog
+        loadingDialog = new Dialog(ProductDetailsActivity.this);
+        loadingDialog.setContentView(R.layout.loading_progress_dialog);
+        loadingDialog.setCancelable(false);
+        loadingDialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.slider_background));
+        loadingDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        loadingDialog.show();
+        ///////////////loading dialog
 
         productImages = new ArrayList<>();
         productID = getIntent().getStringExtra("PRODUCT_ID");
@@ -211,17 +222,22 @@ public class ProductDetailsActivity extends AppCompatActivity {
                     }
 
                     if(DBqueries.wishList.size() == 0){
-                        DBqueries.loadWishList(ProductDetailsActivity.this);
+                        DBqueries.loadWishList(ProductDetailsActivity.this, loadingDialog);
+                    }
+                    else{
+                        loadingDialog.dismiss();
                     }
 
                     if(DBqueries.wishList.contains(productID)){
                         ALREADY_ADDED_TO_WISHLIST = true;
+                        addToWishListBtn.setSupportImageTintList(getResources().getColorStateList(R.color.colorPrimary));
                     }
                     else{
                         ALREADY_ADDED_TO_WISHLIST = false;
                     }
 
                 } else {
+                    loadingDialog.dismiss();
                     String error = task.getException().getMessage();
                     Toast.makeText(ProductDetailsActivity.this, error, Toast.LENGTH_SHORT).show();
                 }
@@ -243,22 +259,27 @@ public class ProductDetailsActivity extends AppCompatActivity {
                         addToWishListBtn.setSupportImageTintList(ColorStateList.valueOf(Color.parseColor("#9e9e9e")));
                     } else {
 
-                        Map<Object,String> addProduct = new HashMap<>();
+                        Map<String,Object> addProduct = new HashMap<>();
                         addProduct.put("product_ID_"+String.valueOf(DBqueries.wishList.size()),productID);
 
                         firebaseFirestore.collection("USERS").document(currentUser.getUid()).collection("USER_DATA").document("MY_WISHLIST")
-                                .update().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                .set(addProduct).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if(task.isSuccessful()){
 
+                                    Map<String,Object> updateListSize = new HashMap<>();
+                                    updateListSize.put("list_size",(long) DBqueries.wishList.size()+1);
                                     /////////////////////////
                                     firebaseFirestore.collection("USERS").document(currentUser.getUid()).collection("USER_DATA").document("MY_WISHLIST")
-                                            .set().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            .update(updateListSize).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if(task.isSuccessful()){
-
+                                                ALREADY_ADDED_TO_WISHLIST = true;
+                                                addToWishListBtn.setSupportImageTintList(getResources().getColorStateList(R.color.colorPrimary));
+                                                DBqueries.wishList.add(productID);
+                                                Toast.makeText(ProductDetailsActivity.this, "Product added to wishlist successfully", Toast.LENGTH_SHORT).show();
                                             }
                                             else{
                                                 String error = task.getException().getMessage();
@@ -275,8 +296,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
                             }
                         });
 
-                        ALREADY_ADDED_TO_WISHLIST = true;
-                        addToWishListBtn.setSupportImageTintList(getResources().getColorStateList(R.color.colorPrimary));
                     }
                 }
             }

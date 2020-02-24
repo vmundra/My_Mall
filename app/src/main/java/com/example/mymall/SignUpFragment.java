@@ -248,7 +248,7 @@ public class SignUpFragment extends Fragment {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if(task.isSuccessful()){
 
-                                    Map <Object,String> userdata = new HashMap<>();
+                                    Map <String,Object> userdata = new HashMap<>();
                                     userdata.put("fullname",fullName.getText().toString());
 
                                     // So the firebase firestore will create a file or folder named USERS
@@ -262,7 +262,7 @@ public class SignUpFragment extends Fragment {
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     if(task.isSuccessful()){
 
-                                                        Map <Object,Long> listSize = new HashMap<>();
+                                                        Map <String,Object> listSize = new HashMap<>();
                                                         listSize.put("list_size",(long)0);
 
                                                         firebaseFirestore.collection("USERS")
