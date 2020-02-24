@@ -92,6 +92,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private Dialog loadingDialog;
     private LinearLayout coupenRedemptionLayout;
 
+    private DocumentSnapshot documentSnapshot;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,7 +154,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
 
-                    DocumentSnapshot documentSnapshot = task.getResult();
+                    documentSnapshot = task.getResult();
 
                     for (long x = 1; x < (long) documentSnapshot.get("no_of_product_images") + 1; x++) {
 
@@ -221,13 +223,17 @@ public class ProductDetailsActivity extends AppCompatActivity {
                         tvCodIndicator.setVisibility(View.INVISIBLE);
                     }
 
-                    if(DBqueries.wishList.size() == 0){
-                        DBqueries.loadWishList(ProductDetailsActivity.this, loadingDialog);
+                    if(currentUser!=null) {
+
+                        if (DBqueries.wishList.size() == 0) {
+                            DBqueries.loadWishList(ProductDetailsActivity.this, loadingDialog, false);
+                        } else {
+                            loadingDialog.dismiss();
+                        }
                     }
                     else{
                         loadingDialog.dismiss();
                     }
-
                     if(DBqueries.wishList.contains(productID)){
                         ALREADY_ADDED_TO_WISHLIST = true;
                         addToWishListBtn.setSupportImageTintList(getResources().getColorStateList(R.color.colorPrimary));
@@ -276,6 +282,19 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if(task.isSuccessful()){
+
+                                                if(DBqueries.wishlistModelList.size() != 0){
+
+                                                    DBqueries.wishlistModelList.add(new WishlistModel(documentSnapshot.get("product_image_1").toString(),
+                                                            documentSnapshot.get("product_title_").toString(),
+                                                            (long)documentSnapshot.get("free_coupens_"),
+                                                            documentSnapshot.get("average_rating").toString(),
+                                                            (long)documentSnapshot.get("total_ratings"),
+                                                            documentSnapshot.get("product_price").toString(),
+                                                            documentSnapshot.get("cutted_price").toString(),
+                                                            (boolean)documentSnapshot.get("COD")));
+                                                }
+
                                                 ALREADY_ADDED_TO_WISHLIST = true;
                                                 addToWishListBtn.setSupportImageTintList(getResources().getColorStateList(R.color.colorPrimary));
                                                 DBqueries.wishList.add(productID);
@@ -455,8 +474,27 @@ public class ProductDetailsActivity extends AppCompatActivity {
         }
         else{
             coupenRedemptionLayout.setVisibility(View.VISIBLE);
-
         }
+
+        if(currentUser!=null) {
+
+            if (DBqueries.wishList.size() == 0) {
+                DBqueries.loadWishList(ProductDetailsActivity.this, loadingDialog, false);
+            } else {
+                loadingDialog.dismiss();
+            }
+        }
+        else{
+            loadingDialog.dismiss();
+        }
+        if(DBqueries.wishList.contains(productID)){
+            ALREADY_ADDED_TO_WISHLIST = true;
+            addToWishListBtn.setSupportImageTintList(getResources().getColorStateList(R.color.colorPrimary));
+        }
+        else{
+            ALREADY_ADDED_TO_WISHLIST = false;
+        }
+
     }
 
     public static void showDialogRecyclerView() {
