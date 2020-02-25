@@ -64,6 +64,14 @@ public class MyWishlistFragment extends Fragment {
         return view;
     }
 
+    //////////////tune mostly DBqueries me ya kahi code me kuch gadbad ki h, jiski wajah se
+    ////////////jab bhi tu add to wish list ke heart wale icon pr click krta h to pehle to wo red ho jata h
+    ///////////// but badme agar app ko cache se hata kr run khola
+    ////////////// to usme jakr agar wapas usko apne wish list se hataya,
+    /////////////// matlab agar heart ko red se grey kiya na to databse me 1 se 0 hona chahiye
+    ////////////// but wo 1 ka 1 hi rehta h
+    /////////////// and agar wapas red kiya to wo databse me 2 ho jata h
+
 }
 
 
