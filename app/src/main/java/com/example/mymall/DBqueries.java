@@ -18,7 +18,9 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DBqueries {
 
@@ -200,6 +202,45 @@ public class DBqueries {
                 dialog.dismiss();
             }
         });
+    }
+
+    public static void removeFromWishlist(final int index, final Context context){
+
+        wishList.remove(index);
+
+        Map<String,Object> updateWishlist = new HashMap<>();
+
+        for(int x=0; x<wishList.size();x++){
+            updateWishlist.put("product_ID_"+x,wishList.get(x));
+        }
+        updateWishlist.put("list_size",(long) wishList.size());
+
+        firebaseFirestore.collection("USERS")
+                .document(FirebaseAuth.getInstance().getUid())
+                .collection("USER_DATA")
+                .document("MY_WISHLIST")
+                .set(updateWishlist).addOnCompleteListener(new OnCompleteListener<Void>() {// set krne se new document create hota h.......
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+
+                    if(wishlistModelList.size() !=0 ){
+                        wishlistModelList.remove(index);
+                        MyWishlistFragment.wishlistAdapter.notifyDataSetChanged();
+                    }
+                    ProductDetailsActivity.ALREADY_ADDED_TO_WISHLIST = false;
+                    Toast.makeText(context, "removed successfully!!", Toast.LENGTH_SHORT).show();
+
+                }
+                else{
+                    ProductDetailsActivity.addToWishListBtn.setSupportImageTintList(context.getResources().getColorStateList(R.color.colorPrimary));
+                    String error = task.getException().getMessage();
+                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+                }
+                ProductDetailsActivity.addToWishListBtn.setEnabled(true);
+            }
+        });
+        
     }
 
 }

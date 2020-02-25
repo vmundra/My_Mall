@@ -45,10 +45,10 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     private ViewPager productImagesViewPager;
     private TabLayout viewpagerIndicator;
-    private FloatingActionButton addToWishListBtn;
+    public static FloatingActionButton addToWishListBtn;
     private Button coupenRedeemBtn;
     private FirebaseUser currentUser;
-    private static boolean ALREADY_ADDED_TO_WISHLIST = false;
+    public static boolean ALREADY_ADDED_TO_WISHLIST = false;
     List<String> productImages;
 
     private FirebaseFirestore firebaseFirestore;
@@ -260,11 +260,15 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 if (currentUser == null) {
                     signInDialog.show();
                 } else {
-                    if (ALREADY_ADDED_TO_WISHLIST == true) {
-                        ALREADY_ADDED_TO_WISHLIST = false;
+                    addToWishListBtn.setEnabled(false); // taki user multiple times btn pr click na kare......
+
+                    if (ALREADY_ADDED_TO_WISHLIST) {
+
+                        int index = DBqueries.wishList.indexOf(productID);
+                        DBqueries.removeFromWishlist(index,ProductDetailsActivity.this);
                         addToWishListBtn.setSupportImageTintList(ColorStateList.valueOf(Color.parseColor("#9e9e9e")));
                     } else {
-
+                        addToWishListBtn.setSupportImageTintList(getResources().getColorStateList(R.color.colorPrimary));
                         Map<String,Object> addProduct = new HashMap<>();
                         addProduct.put("product_ID_"+String.valueOf(DBqueries.wishList.size()),productID);
 
@@ -301,14 +305,17 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                                 Toast.makeText(ProductDetailsActivity.this, "Product added to wishlist successfully", Toast.LENGTH_SHORT).show();
                                             }
                                             else{
+                                                addToWishListBtn.setSupportImageTintList(ColorStateList.valueOf(Color.parseColor("#9e9e9e")));
                                                 String error = task.getException().getMessage();
                                                 Toast.makeText(ProductDetailsActivity.this, error, Toast.LENGTH_SHORT).show();
                                             }
+                                            addToWishListBtn.setEnabled(true);
                                         }
                                     });
                                     ////////////////////////
                                 }
                                 else{
+                                    addToWishListBtn.setEnabled(true);
                                     String error = task.getException().getMessage();
                                     Toast.makeText(ProductDetailsActivity.this, error, Toast.LENGTH_SHORT).show();
                                 }
