@@ -44,7 +44,7 @@ public class DBqueries {
 
     public static void loadCategories(final RecyclerView categoryRecyclerView, final Context context){
 
-        categoryModelList.clear();
+//        categoryModelList.clear();
         firebaseFirestore.collection("CATEGORIES").orderBy("index").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -158,7 +158,7 @@ public class DBqueries {
 
     public static void loadWishList(final Context context, final Dialog dialog, final boolean loadProductData){
 
-        wishList.clear();
+//        wishList.clear();
         firebaseFirestore.collection("USERS")
                 .document(FirebaseAuth.getInstance().getUid())
                 .collection("USER_DATA")
