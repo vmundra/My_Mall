@@ -65,7 +65,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private static LinearLayout selectedCoupen;
     //////////////////////coupenDialog
 
-    private String productID;
+    public static String productID;
 
     ///////////////////////////product description
     private ConstraintLayout productDetailsOnlyContainer;
@@ -273,7 +273,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                         addProduct.put("product_ID_"+String.valueOf(DBqueries.wishList.size()),productID);
 
                         firebaseFirestore.collection("USERS").document(currentUser.getUid()).collection("USER_DATA").document("MY_WISHLIST")
-                                .set(addProduct).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                .update(addProduct).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if(task.isSuccessful()){
@@ -499,6 +499,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
             addToWishListBtn.setSupportImageTintList(getResources().getColorStateList(R.color.colorPrimary));
         }
         else{
+            addToWishListBtn.setSupportImageTintList(ColorStateList.valueOf(Color.parseColor("#9e9e9e")));
             ALREADY_ADDED_TO_WISHLIST = false;
         }
 
