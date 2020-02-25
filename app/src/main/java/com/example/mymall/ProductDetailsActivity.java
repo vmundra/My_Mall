@@ -86,7 +86,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
 
     /////////////////rating layout
-    private LinearLayout rateNowContainer;
+    public static LinearLayout rateNowContainer;
     private TextView totalRatings, totalRatingsFigure, averageRating;
     private LinearLayout ratingsNoContainer;
     private LinearLayout ratingsPrgressBarContainer;
@@ -229,6 +229,9 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
                     if(currentUser!=null) {
 
+                        if(DBqueries.myRating.size()==0){
+                            DBqueries.loadRatingList(ProductDetailsActivity.this);
+                        }
                         if (DBqueries.wishList.size() == 0) {
                             DBqueries.loadWishList(ProductDetailsActivity.this, loadingDialog, false);
                         } else {
@@ -491,11 +494,16 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
         if(currentUser!=null) {
 
+            if(DBqueries.myRating.size()==0){
+                DBqueries.loadRatingList(ProductDetailsActivity.this);
+            }
+
             if (DBqueries.wishList.size() == 0) {
                 DBqueries.loadWishList(ProductDetailsActivity.this, loadingDialog, false);
             } else {
                 loadingDialog.dismiss();
             }
+
         }
         else{
             loadingDialog.dismiss();
@@ -522,7 +530,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         }
     }
 
-    private void setRating(int starPosition) {
+    public static void setRating(int starPosition) {
 
         for (int x = 0; x < rateNowContainer.getChildCount(); x++) {
 

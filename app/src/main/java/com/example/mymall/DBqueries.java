@@ -41,10 +41,13 @@ public class DBqueries {
     public static List<String> wishList = new ArrayList<>();
     public static List<WishlistModel> wishlistModelList = new ArrayList<>();
 
+    public static List<String> myRatedIds = new ArrayList<>();
+    public static List<Long> myRating = new ArrayList<>(); // this list stores the number of ratings the user has given to the products (i.e out of 5)
+
 
     public static void loadCategories(final RecyclerView categoryRecyclerView, final Context context){
 
-//        categoryModelList.clear();
+        categoryModelList.clear();
         firebaseFirestore.collection("CATEGORIES").orderBy("index").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -158,7 +161,7 @@ public class DBqueries {
 
     public static void loadWishList(final Context context, final Dialog dialog, final boolean loadProductData){
 
-//        wishList.clear();
+        wishList.clear();
         firebaseFirestore.collection("USERS")
                 .document(FirebaseAuth.getInstance().getUid())
                 .collection("USER_DATA")
@@ -263,6 +266,40 @@ public class DBqueries {
 //                }
 
                 ProductDetailsActivity.running_wishlist_query = false;
+            }
+        });
+
+    }
+
+    public static void loadRatingList(final Context context){
+
+        myRatedIds.clear();
+        myRating.clear();
+
+        firebaseFirestore.collection("USERS").document(FirebaseAuth.getInstance().getUid())
+                .collection("USER_DATA")
+                .document("MY_RATINGS")
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                if(task.isSuccessful()){
+
+                    for(long x =0; x< (long) task.getResult().get("list_size"); x++){
+
+                        myRatedIds.add(task.getResult().get("product_ID_"+x).toString());
+                        myRating.add((long) task.getResult().get("rating_"+x));
+
+                        if(task.getResult().get("product_ID_"+x).toString().equals(ProductDetailsActivity.productID) && ProductDetailsActivity.rateNowContainer != null){
+
+                            ProductDetailsActivity.setRating(Integer.parseInt(String.valueOf((long) task.getResult().get("rating_"+x)))-1);
+                        }
+                    }
+                }
+                else{
+                    String error = task.getException().getMessage();
+                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
