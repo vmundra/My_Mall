@@ -53,6 +53,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     /////////////variable for setting ADDD_TO_WISHLIST_BTN enable or disable
     public static boolean running_wishlist_query = false;
+    public static boolean running_rated_query = false;
     /////////////variable for setting ADDD_TO_WISHLIST_BTN enable or disable
 
     private FirebaseFirestore firebaseFirestore;
@@ -86,6 +87,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
 
     /////////////////rating layout
+    public static int initialRating;
     public static LinearLayout rateNowContainer;
     private TextView totalRatings, totalRatingsFigure, averageRating;
     private LinearLayout ratingsNoContainer;
@@ -108,6 +110,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        initialRating = -1; // initial rating isliye 0 set nhi kiya kyuki fir zero matlab 1 star ho jayega
 
         productImagesViewPager = findViewById(R.id.product_images_viewpager);
         viewpagerIndicator = findViewById(R.id.viewpager_indicator);
@@ -241,6 +245,13 @@ public class ProductDetailsActivity extends AppCompatActivity {
                     else{
                         loadingDialog.dismiss();
                     }
+
+                    if(DBqueries.myRatedIds.contains(productID)){
+                        int index = DBqueries.myRatedIds.indexOf(productID);
+                        initialRating = Integer.parseInt(String.valueOf(DBqueries.myRating.get(index))) -1;
+                        setRating(initialRating);
+                    }
+
                     if(DBqueries.wishList.contains(productID)){
                         ALREADY_ADDED_TO_WISHLIST = true;
                         addToWishListBtn.setSupportImageTintList(getResources().getColorStateList(R.color.colorPrimary));
@@ -367,7 +378,83 @@ public class ProductDetailsActivity extends AppCompatActivity {
                     if (currentUser == null) {
                         signInDialog.show();
                     } else {
-                        setRating(starPosition);
+                        if(!running_rated_query) {
+                            running_rated_query = true;
+                            setRating(starPosition);
+
+                            if (DBqueries.myRatedIds.contains(productID)) {
+                                // to agar abhi myrateids ke list me koi bhi product ka id h
+                                // to matlab user ne already kabhi to raings diya tha warna nhi
+                            } else {
+                                //abhi ye updation Products wale collection me krne wale h
+                                Map<String, Object> productRating = new HashMap<>();
+                                productRating.put((starPosition + 1) + "_star", (long) documentSnapshot.get((starPosition + 1) + "_star") + 1);
+                                productRating.put("average_rating", calculateAverageRating(starPosition + 1));
+                                productRating.put("total_ratings", (long) documentSnapshot.get("total_ratings") + 1);
+
+                                firebaseFirestore.collection("PRODUCTS")
+                                        .document(productID)
+                                        .update(productRating).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Map<String, Object> rating = new HashMap<>();
+                                            rating.put("list_size",(long) DBqueries.myRatedIds.size()+1);
+                                            rating.put("product_ID_" + DBqueries.myRatedIds.size(), productID);
+                                            rating.put("rating_" + DBqueries.myRatedIds.size(), (long) (starPosition + 1));
+
+                                            // ye neeche wali condition tab ki h jab user first time rating deta h product ko
+                                            firebaseFirestore.collection("USERs")
+                                                    .document(currentUser.getUid())
+                                                    .collection("USER_DATA")
+                                                    .document("MY_RATINGS")
+                                                    .update(rating).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+
+                                                    if (task.isSuccessful()) {
+                                                        DBqueries.myRatedIds.add(productID);
+                                                        DBqueries.myRating.add((long)starPosition+1);
+
+                                                        TextView rating = (TextView) ratingsNoContainer.getChildAt(5-starPosition-1);
+
+                                                        // to yaha pr ye rating actually wo ratings ke main container, parent samajh le,
+                                                        // usko access krta h and uske 5 children ko access krke unka text set krta h..... :)
+                                                        rating.setText(String.valueOf(Integer.parseInt(rating.getText().toString())+1));
+
+                                                        totalRatingMiniView.setText("("+((long)documentSnapshot.get("total_ratings")+1)+")ratings");
+                                                        totalRatings.setText((long)documentSnapshot.get("total_ratings")+1+" ratings");
+                                                        totalRatingsFigure.setText(String.valueOf((long) documentSnapshot.get("total_ratings")+1));
+                                                        averageRating.setText(String.valueOf(calculateAverageRating(starPosition+1)));
+                                                        averageRatingMiniview.setText(String.valueOf(calculateAverageRating(starPosition+1)));
+
+                                                        for (int x = 0; x < 5; x++) {
+                                                            TextView ratingfigures = (TextView) ratingsNoContainer.getChildAt(x);
+
+                                                            ProgressBar progressBar = (ProgressBar) ratingsPrgressBarContainer.getChildAt(x);
+                                                            int maxProgress = Integer.parseInt(String.valueOf((long) documentSnapshot.get("total_ratings")))+1;
+                                                            progressBar.setMax(maxProgress);
+                                                            progressBar.setProgress(Integer.parseInt(ratingfigures.getText().toString()));
+                                                        }
+                                                        Toast.makeText(ProductDetailsActivity.this, "Thanx for feedback", Toast.LENGTH_SHORT).show();
+                                                    } else {
+                                                        setRating(initialRating);// agar kuchh process me gadbad ho gayi to initial rating hi wapas set hojayega
+                                                        String error = task.getException().getMessage();
+                                                        Toast.makeText(ProductDetailsActivity.this, error, Toast.LENGTH_SHORT).show();
+                                                    }
+                                                    running_rated_query = false;
+                                                }
+                                            });
+                                        } else {
+                                            running_rated_query = false;
+                                            setRating(initialRating);// agar kuchh process me gadbad ho gayi to initial rating hi wapas set hojayega
+                                            String error = task.getException().getMessage();
+                                            Toast.makeText(ProductDetailsActivity.this, error, Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                            }
+                        }
                     }
                 }
             });
@@ -508,6 +595,11 @@ public class ProductDetailsActivity extends AppCompatActivity {
         else{
             loadingDialog.dismiss();
         }
+        if(DBqueries.myRatedIds.contains(productID)){
+            int index = DBqueries.myRatedIds.indexOf(productID);
+            initialRating = Integer.parseInt(String.valueOf(DBqueries.myRating.get(index))) -1;
+            setRating(initialRating);
+        }
         if(DBqueries.wishList.contains(productID)){
             ALREADY_ADDED_TO_WISHLIST = true;
             addToWishListBtn.setSupportImageTintList(getResources().getColorStateList(R.color.colorPrimary));
@@ -531,18 +623,27 @@ public class ProductDetailsActivity extends AppCompatActivity {
     }
 
     public static void setRating(int starPosition) {
+            for (int x = 0; x < rateNowContainer.getChildCount(); x++) {
 
-        for (int x = 0; x < rateNowContainer.getChildCount(); x++) {
+                ImageView starBtn = (ImageView) rateNowContainer.getChildAt(x);
+                starBtn.setImageTintList(ColorStateList.valueOf(Color.parseColor("#bebebe")));
 
-            ImageView starBtn = (ImageView) rateNowContainer.getChildAt(x);
-            starBtn.setImageTintList(ColorStateList.valueOf(Color.parseColor("#bebebe")));
-
-            if (x <= starPosition) {
-                starBtn.setImageTintList(ColorStateList.valueOf(Color.parseColor("#ffbb00")));
+                if (x <= starPosition) {
+                    starBtn.setImageTintList(ColorStateList.valueOf(Color.parseColor("#ffbb00")));
+                }
             }
-        }
     }
 
+
+    private long calculateAverageRating(long currentUserRating){
+        long totalStars = 0;
+        for(int x =1; x<6;x++){
+            totalStars = totalStars + ((long)documentSnapshot.get(x+"_star")*x); // multiply by x kiya taki humko pata chale ki kitne users ne stars diya h
+            // matlab 1 star multiply by uske no.of users, 2 stars multiply by it's users and so on
+        }
+        totalStars = totalStars + currentUserRating;
+       return totalStars/((long) documentSnapshot.get("total_ratings")+1);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
