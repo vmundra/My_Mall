@@ -2,6 +2,7 @@ package com.example.mymall;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.view.View;
@@ -28,6 +29,7 @@ import java.util.Map;
 
 public class DBqueries {
 
+
     public static FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     public static List<CategoryModel> categoryModelList = new ArrayList<>();
 
@@ -48,6 +50,9 @@ public class DBqueries {
 
     public static List<String> cartList = new ArrayList<>();
     public static List<CartItemModel> cartItemModelList = new ArrayList<>();
+
+    public static int selectedAddress = -1;
+    public static List<AddressesModel> addressesModelList = new ArrayList<>();
 
 
     public static void loadCategories(final RecyclerView categoryRecyclerView, final Context context){
@@ -439,6 +444,51 @@ public class DBqueries {
             }
         });
 
+    }
+
+    public static void loadAddress(final Context context, final Dialog loadingDialog){
+
+        addressesModelList.clear();
+        firebaseFirestore.collection("USERS")
+                .document(FirebaseAuth.getInstance().getUid())
+                .collection("USER_DATA")
+                .document("MY_ADDRESS")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()){
+                            Intent deliveryIntent;
+
+                            if((long) task.getResult().get("list_size") == 0){
+                                // matlab user ke pass agar koi address nhi h to list size zero hoga
+                                deliveryIntent = new Intent(context,AddAddressActivity.class);
+                                // to agar size zero h to addressactivity pr bhej dena
+                                }
+                                else{
+                                    for (long x = 1; x< (long) task.getResult().get("list_size")+1; x++){
+
+                                        addressesModelList.add(new AddressesModel(task.getResult().get("fullname_"+x).toString(),
+                                                task.getResult().get("address_"+x).toString(),
+                                                task.getResult().get("pincode_"+x).toString(),
+                                                (boolean) task.getResult().get("selected_"+x)));
+
+                                        if ((boolean) task.getResult().get("selected_"+x)){
+                                            selectedAddress = Integer.parseInt(String.valueOf(x-1));
+                                        }
+                                    }
+                                    deliveryIntent = new Intent(context,DeliveryActivity.class);
+
+                                }
+                                context.startActivity(deliveryIntent);
+                        }
+                        else{
+                            String error = task.getException().getMessage();
+                            Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+                        }
+                        loadingDialog.dismiss();
+                    }
+                });
     }
 
     public static void clearData(){

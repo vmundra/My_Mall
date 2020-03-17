@@ -109,9 +109,9 @@
 
 
                 <EditText
+                    android:id="@+id/state_spinner"
                     android:layout_weight="1"
                     android:hint="State*"
-                    android:inputType="textPersonName"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="16dp"
                     android:textColor="@color/colorPrimary"
