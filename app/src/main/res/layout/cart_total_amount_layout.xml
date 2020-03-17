@@ -6,8 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="4dp"
     android:layout_marginBottom="4dp"
-    android:background="#d6d6d6"
-    android:elevation="3dp">
+    android:background="#d6d6d6">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"

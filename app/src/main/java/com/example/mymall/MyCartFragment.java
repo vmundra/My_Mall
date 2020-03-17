@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextClock;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +58,7 @@ public class MyCartFragment extends Fragment {
         if(DBqueries.cartItemModelList.size() == 0){
 
             DBqueries.cartList.clear();
-            DBqueries.loadCartList(getContext(),loadingDialog,true);
+            DBqueries.loadCartList(getContext(),loadingDialog,true,new TextView(getContext()));
         }
         else{
             loadingDialog.dismiss();

@@ -27,6 +27,7 @@
         android:textAlignment="center"
         android:text="0"
         android:background="@drawable/badge_count"
+        android:visibility="invisible"
         android:textColor="@color/colorAccent"
         android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="@+id/badge_icon"

@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private int currentFragment = -1;
 
     private Window window;
+    private TextView badgeCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,7 +141,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
 
-
         signInDialog = new Dialog(MainActivity.this);
         signInDialog.setContentView(R.layout.sign_in_dialog);
         signInDialog.setCancelable(true);
@@ -178,10 +178,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onStart();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
-            navigationView.getMenu().getItem(navigationView.getMenu().size()-1).setEnabled(false);
-        }
-        else{
-            navigationView.getMenu().getItem(navigationView.getMenu().size()-1).setEnabled(true);
+            navigationView.getMenu().getItem(navigationView.getMenu().size() - 1).setEnabled(false);
+        } else {
+            navigationView.getMenu().getItem(navigationView.getMenu().size() - 1).setEnabled(true);
         }
         invalidateOptionsMenu();
     }
@@ -223,31 +222,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getMenuInflater().inflate(R.menu.main, menu);
             MenuItem cartItem = menu.findItem(R.id.main_cart_icon);
 
-            if (DBqueries.cartList.size() > 0){
-                //to yaha pr humne wo main home page me upar ka 3rd icon jo ki h cart icon usko find kiya h
-                cartItem.setActionView(R.layout.badge_layout);
+            //to yaha pr humne wo main home page me upar ka 3rd icon jo ki h cart icon usko find kiya h
+            cartItem.setActionView(R.layout.badge_layout);
 
-                ImageView badgeIcon = cartItem.getActionView().findViewById(R.id.badge_icon);
-                badgeIcon.setImageResource(R.mipmap.cart_white);
+            ImageView badgeIcon = cartItem.getActionView().findViewById(R.id.badge_icon);
+            badgeIcon.setImageResource(R.mipmap.cart_white);
 
-                TextView badgeCount = cartItem.getActionView().findViewById(R.id.badge_count);
-                badgeCount.setText(String.valueOf(DBqueries.cartList.size()));
-
-                cartItem.getActionView().setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(currentUser==null) {
-                            signInDialog.show();
-                        }
-                        else{
-                            gotoFragment("My Cart", new MyCartFragment(), CART_FRAGMENT);
-                        }
+            badgeCount = cartItem.getActionView().findViewById(R.id.badge_count);
+            if (currentUser != null) {
+                if (DBqueries.cartList.size() == 0) {
+                    DBqueries.loadCartList(MainActivity.this, new Dialog(MainActivity.this), false, badgeCount);
+                }
+                else{
+                        badgeCount.setVisibility(View.VISIBLE);
+                    if( DBqueries.cartList.size() < 99) {
+                        badgeCount.setText(String.valueOf(DBqueries.cartList.size()));
                     }
-                });
+                    else{
+                        badgeCount.setText("99");
+                    }
+                }
             }
-            else{
-                cartItem.setActionView(null);
-            }
+
+            cartItem.getActionView().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (currentUser == null) {
+                        signInDialog.show();
+                    } else {
+                        gotoFragment("My Cart", new MyCartFragment(), CART_FRAGMENT);
+                    }
+                }
+            });
         }
         return true;
     }
@@ -264,10 +270,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.main_notification_icon) {
             return true;
         } else if (id == R.id.main_cart_icon) {
-            if(currentUser==null) {
+            if (currentUser == null) {
                 signInDialog.show();
-            }
-            else{
+            } else {
                 gotoFragment("My Cart", new MyCartFragment(), CART_FRAGMENT);
                 return true;
             }
@@ -286,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        if(currentUser!=null) {
+        if (currentUser != null) {
             int id = item.getItemId();
             item.setChecked(true);
 
@@ -309,13 +314,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 FirebaseAuth.getInstance().signOut();
 
                 DBqueries.clearData();
-                Intent registerIntent = new Intent(MainActivity.this,RegisterActivity.class);
+                Intent registerIntent = new Intent(MainActivity.this, RegisterActivity.class);
                 startActivity(registerIntent);
                 finish();
             }
             drawer.closeDrawer(GravityCompat.START);
             return true;
-        }else{
+        } else {
             drawer.closeDrawer(GravityCompat.START);
             signInDialog.show();
             return false;

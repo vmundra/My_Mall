@@ -64,6 +64,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     private Button buyNowBtn;
     private LinearLayout addToCartButton;
+    private TextView badgeCount;
 
 
     //////////////////////coupenDialog
@@ -245,7 +246,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                             DBqueries.loadWishList(ProductDetailsActivity.this, loadingDialog, false);
                         }
                         if (DBqueries.cartList.size() == 0) {
-                            DBqueries.loadCartList(ProductDetailsActivity.this, loadingDialog, false);
+                            DBqueries.loadCartList(ProductDetailsActivity.this, loadingDialog, false,badgeCount);
                         } else {
                             loadingDialog.dismiss();
                         }
@@ -681,9 +682,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
             if (DBqueries.myRating.size() == 0) {
                 DBqueries.loadRatingList(ProductDetailsActivity.this);
             }
-            if (DBqueries.cartList.size() == 0) {
-                DBqueries.loadCartList(ProductDetailsActivity.this, loadingDialog, false);
-            }
             if (DBqueries.wishList.size() == 0) {
                 DBqueries.loadWishList(ProductDetailsActivity.this, loadingDialog, false);
             } else {
@@ -711,6 +709,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
             addToWishListBtn.setSupportImageTintList(ColorStateList.valueOf(Color.parseColor("#9e9e9e")));
             ALREADY_ADDED_TO_WISHLIST = false;
         }
+        invalidateOptionsMenu();
 
     }
 
@@ -764,32 +763,40 @@ public class ProductDetailsActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.search_and_cart_icon, menu);
         cartItem = menu.findItem(R.id.main_cart_icon);
 
-        if (DBqueries.cartList.size() > 0) {
-            //to yaha pr humne wo main home page me upar ka 3rd icon jo ki h cart icon usko find kiya h
-            cartItem.setActionView(R.layout.badge_layout);
+        cartItem.setActionView(R.layout.badge_layout);
+        //to yaha pr humne wo main home page me upar ka 3rd icon jo ki h cart icon usko find kiya h
 
-            ImageView badgeIcon = cartItem.getActionView().findViewById(R.id.badge_icon);
-            badgeIcon.setImageResource(R.mipmap.cart_white);
+        ImageView badgeIcon = cartItem.getActionView().findViewById(R.id.badge_icon);
+        badgeIcon.setImageResource(R.mipmap.cart_white);
 
-            TextView badgeCount = cartItem.getActionView().findViewById(R.id.badge_count);
-            badgeCount.setText(String.valueOf(DBqueries.cartList.size()));
-
-            cartItem.getActionView().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (currentUser == null) {
-                        signInDialog.show();
-                    } else {
-                        Intent cartIntent = new Intent(ProductDetailsActivity.this, MainActivity.class);
-                        showCart = true;
-                        startActivity(cartIntent);
-                    }
+        badgeCount = cartItem.getActionView().findViewById(R.id.badge_count);
+        if (currentUser != null) {
+            if (DBqueries.cartList.size() == 0) {
+                DBqueries.loadCartList(ProductDetailsActivity.this, loadingDialog, false,badgeCount);
+            }
+            else{
+                badgeCount.setVisibility(View.VISIBLE);
+                if( DBqueries.cartList.size() < 99) {
+                    badgeCount.setText(String.valueOf(DBqueries.cartList.size()));
                 }
-            });
+                else{
+                    badgeCount.setText("99");
+                }
+            }
         }
-        else{
-            cartItem.setActionView(null);
-        }
+        cartItem.getActionView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currentUser == null) {
+                    signInDialog.show();
+                } else {
+                    Intent cartIntent = new Intent(ProductDetailsActivity.this, MainActivity.class);
+                    showCart = true;
+                    startActivity(cartIntent);
+                }
+            }
+        });
+
         return true;
     }
 
