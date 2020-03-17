@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import android.app.Dialog;
+import android.app.admin.DelegatedAdminReceiver;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -246,7 +247,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                             DBqueries.loadWishList(ProductDetailsActivity.this, loadingDialog, false);
                         }
                         if (DBqueries.cartList.size() == 0) {
-                            DBqueries.loadCartList(ProductDetailsActivity.this, loadingDialog, false,badgeCount);
+                            DBqueries.loadCartList(ProductDetailsActivity.this, loadingDialog, false,badgeCount,new TextView(ProductDetailsActivity.this));
                         } else {
                             loadingDialog.dismiss();
                         }
@@ -296,8 +297,12 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     if (task.isSuccessful()) {
 
+                                                        // abhi agar dekhega to humne  """"DBqueries.cartItemModelList.add(0,""" aisa likha h just 2 line neeche
+                                                        // waha index 0 isliye diya h
+                                                        // taki jo bhi product add kare hum
+                                                        // wo index value 0 ya top ya first position pr hi aaye.......
                                                         if (DBqueries.cartItemModelList.size() != 0) {
-                                                            DBqueries.cartItemModelList.add(new CartItemModel(CartItemModel.CART_ITEM, documentSnapshot.get("product_image_1").toString(),
+                                                            DBqueries.cartItemModelList.add(0,new CartItemModel(CartItemModel.CART_ITEM, documentSnapshot.get("product_image_1").toString(),
                                                                     documentSnapshot.get("product_title").toString(),
                                                                     (long) documentSnapshot.get("free_coupens"),
                                                                     documentSnapshot.get("product_price").toString(),
@@ -585,11 +590,34 @@ public class ProductDetailsActivity extends AppCompatActivity {
         buyNowBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                loadingDialog.show();
                 if (currentUser == null) {
                     signInDialog.show();
                 } else {
-                    Intent deliveryIntent = new Intent(ProductDetailsActivity.this, DeliveryActivity.class);
-                    startActivity(deliveryIntent);
+                    DeliveryActivity.cartItemModelList.clear();
+                    DeliveryActivity.cartItemModelList = new ArrayList<>();
+
+                    DeliveryActivity.cartItemModelList.add(new CartItemModel(CartItemModel.CART_ITEM, documentSnapshot.get("product_image_1").toString(),
+                            documentSnapshot.get("product_title").toString(),
+                            (long) documentSnapshot.get("free_coupens"),
+                            documentSnapshot.get("product_price").toString(),
+                            documentSnapshot.get("cutted_price").toString(),
+                            (long) 1,
+                            (long) 0,
+                            (long) 0,
+                            productID,
+                            (boolean) documentSnapshot.get("in_stock")));
+
+                    DeliveryActivity.cartItemModelList.add(new CartItemModel(CartItemModel.TOTAL_AMOUNT));
+
+                    if (DBqueries.addressesModelList.size() == 0) {
+                        DBqueries.loadAddress(ProductDetailsActivity.this, loadingDialog);
+                    }
+                    else{
+                        loadingDialog.dismiss();
+                        Intent deliveryIntent = new Intent(ProductDetailsActivity.this, DeliveryActivity.class);
+                        startActivity(deliveryIntent);
+                    }
                 }
             }
         });
@@ -782,7 +810,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         badgeCount = cartItem.getActionView().findViewById(R.id.badge_count);
         if (currentUser != null) {
             if (DBqueries.cartList.size() == 0) {
-                DBqueries.loadCartList(ProductDetailsActivity.this, loadingDialog, false,badgeCount);
+                DBqueries.loadCartList(ProductDetailsActivity.this, loadingDialog, false,badgeCount,new TextView(ProductDetailsActivity.this));
             }
             else{
                 badgeCount.setVisibility(View.VISIBLE);

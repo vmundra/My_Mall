@@ -21,7 +21,7 @@ public class DeliveryActivity extends AppCompatActivity {
     private RecyclerView deliveryRecyclerView;
     private Button changeOrAddNewAddressBtn;
     private TextView totalAmount;
-
+    public static List<CartItemModel> cartItemModelList;
     private TextView fullname, fullAddress, pincode;
 
     public static final int SELECT_ADDRESS = 0;
@@ -50,7 +50,7 @@ public class DeliveryActivity extends AppCompatActivity {
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         deliveryRecyclerView.setLayoutManager(layoutManager);
 
-        CartAdapter cartAdapter = new CartAdapter(DBqueries.cartItemModelList, totalAmount,false);
+        CartAdapter cartAdapter = new CartAdapter(cartItemModelList, totalAmount,false);
         deliveryRecyclerView.setAdapter(cartAdapter);
         cartAdapter.notifyDataSetChanged();
 

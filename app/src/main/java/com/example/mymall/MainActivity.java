@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             badgeCount = cartItem.getActionView().findViewById(R.id.badge_count);
             if (currentUser != null) {
                 if (DBqueries.cartList.size() == 0) {
-                    DBqueries.loadCartList(MainActivity.this, new Dialog(MainActivity.this), false, badgeCount);
+                    DBqueries.loadCartList(MainActivity.this, new Dialog(MainActivity.this), false, badgeCount, new TextView(MainActivity.this));
                 }
                 else{
                         badgeCount.setVisibility(View.VISIBLE);
@@ -293,41 +293,50 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
-
+MenuItem menuItem;
     public boolean onNavigationItemSelected(MenuItem item) {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        menuItem = item;
 
         if (currentUser != null) {
-            int id = item.getItemId();
-            item.setChecked(true);
 
-            if (id == R.id.nav_my_mall) {
-                actionBarLogo.setVisibility(View.VISIBLE);
-                invalidateOptionsMenu();
-                setFragment(new HomeFragment(), HOME_FRAGMENT);
-            } else if (id == R.id.nav_my_orders) {
-                gotoFragment("My Orders", new MyOrdersFragment(), ORDERS_FRAGMENT);
-            } else if (id == R.id.nav_my_rewards) {
-                gotoFragment("My Rewards", new MyRewardsFragment(), REWARDS_FRAGMENT);
-            } else if (id == R.id.nav_my_cart) {
-                gotoFragment("My Cart", new MyCartFragment(), CART_FRAGMENT);
-            } else if (id == R.id.nav_my_wishlist) {
+            drawer.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+                @Override
+                public void onDrawerClosed(View drawerView) {
+                    super.onDrawerClosed(drawerView);
 
-                gotoFragment("My Wishlist", new MyWishlistFragment(), WISHLIST_FRAGMENT);
-            } else if (id == R.id.nav_my_account) {
-                gotoFragment("My Account", new MyAccountFragment(), ACCOUNT_FRAGMENT);
-            } else if (id == R.id.nav_sign_out) {
-                FirebaseAuth.getInstance().signOut();
+                    int id = menuItem.getItemId();
+                    menuItem.setChecked(true);
 
-                DBqueries.clearData();
-                Intent registerIntent = new Intent(MainActivity.this, RegisterActivity.class);
-                startActivity(registerIntent);
-                finish();
-            }
-            drawer.closeDrawer(GravityCompat.START);
+                    if (id == R.id.nav_my_mall) {
+                        actionBarLogo.setVisibility(View.VISIBLE);
+                        invalidateOptionsMenu();
+                        setFragment(new HomeFragment(), HOME_FRAGMENT);
+                    } else if (id == R.id.nav_my_orders) {
+                        gotoFragment("My Orders", new MyOrdersFragment(), ORDERS_FRAGMENT);
+                    } else if (id == R.id.nav_my_rewards) {
+                        gotoFragment("My Rewards", new MyRewardsFragment(), REWARDS_FRAGMENT);
+                    } else if (id == R.id.nav_my_cart) {
+                        gotoFragment("My Cart", new MyCartFragment(), CART_FRAGMENT);
+                    } else if (id == R.id.nav_my_wishlist) {
+
+                        gotoFragment("My Wishlist", new MyWishlistFragment(), WISHLIST_FRAGMENT);
+                    } else if (id == R.id.nav_my_account) {
+                        gotoFragment("My Account", new MyAccountFragment(), ACCOUNT_FRAGMENT);
+                    } else if (id == R.id.nav_sign_out) {
+                        FirebaseAuth.getInstance().signOut();
+
+                        DBqueries.clearData();
+                        Intent registerIntent = new Intent(MainActivity.this, RegisterActivity.class);
+                        startActivity(registerIntent);
+                        finish();
+                    }
+                }
+            });
+
             return true;
         } else {
-            drawer.closeDrawer(GravityCompat.START);
             signInDialog.show();
             return false;
         }
@@ -347,7 +356,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // coz jab app ke left me navbar open karega tab tujhe jo options dekhenge usme se 3 rd wala option my cart ka h
         // and user ko ye bhata rhe h apan ki agar usne 3rd wala option select kiya to ye sab hoga.....
 
-        if (fragmentNo == CART_FRAGMENT) {
+        if (fragmentNo == CART_FRAGMENT || showCart) {
             navigationView.getMenu().getItem(3).setChecked(true);
             params.setScrollFlags(0);
         }
