@@ -51,6 +51,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private FirebaseUser currentUser;
     public static boolean ALREADY_ADDED_TO_WISHLIST = false;
     public static boolean ALREADY_ADDED_TO_CART = false;
+    public static MenuItem cartItem;
     List<String> productImages;
 
     /////////////variable for setting ADDD_TO_WISHLIST_BTN enable or disable
@@ -63,6 +64,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     private Button buyNowBtn;
     private LinearLayout addToCartButton;
+
 
     //////////////////////coupenDialog
     public static TextView coupenTitle, tvCodIndicator, rewardTitle, rewardBody;
@@ -561,6 +563,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                         DBqueries.cartList.add(productID);
                                         Toast.makeText(ProductDetailsActivity.this, "Product added to cart successfully", Toast.LENGTH_SHORT).show();
                                         //  addToWishListBtn.setEnabled(true);
+                                        invalidateOptionsMenu();
                                         running_cart_query = false;
                                     }
 
@@ -759,6 +762,34 @@ public class ProductDetailsActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.search_and_cart_icon, menu);
+        cartItem = menu.findItem(R.id.main_cart_icon);
+
+        if (DBqueries.cartList.size() > 0) {
+            //to yaha pr humne wo main home page me upar ka 3rd icon jo ki h cart icon usko find kiya h
+            cartItem.setActionView(R.layout.badge_layout);
+
+            ImageView badgeIcon = cartItem.getActionView().findViewById(R.id.badge_icon);
+            badgeIcon.setImageResource(R.mipmap.cart_white);
+
+            TextView badgeCount = cartItem.getActionView().findViewById(R.id.badge_count);
+            badgeCount.setText(String.valueOf(DBqueries.cartList.size()));
+
+            cartItem.getActionView().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (currentUser == null) {
+                        signInDialog.show();
+                    } else {
+                        Intent cartIntent = new Intent(ProductDetailsActivity.this, MainActivity.class);
+                        showCart = true;
+                        startActivity(cartIntent);
+                    }
+                }
+            });
+        }
+        else{
+            cartItem.setActionView(null);
+        }
         return true;
     }
 

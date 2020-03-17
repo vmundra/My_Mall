@@ -397,6 +397,9 @@ public class DBqueries {
                         cartItemModelList.remove(index);
                         MyCartFragment.cartAdapter.notifyDataSetChanged();
                     }
+                    if (ProductDetailsActivity.cartItem != null ) {
+                        ProductDetailsActivity.cartItem.setActionView(null); //isse kya hoga ki agar abhi cart se koi item nikala h to uska count decrease hoga
+                    }
                     Toast.makeText(context, "removed successfully!!", Toast.LENGTH_SHORT).show();
                 }
                 else{
