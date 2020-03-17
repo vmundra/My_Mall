@@ -106,9 +106,28 @@ public class AddAddressActivity extends AppCompatActivity {
                                     }
                                     DBqueries.addressesModelList.add(new AddressesModel(name.getText().toString(),city.getText().toString(),pincode.getText().toString(),true));
 
-                                    Intent deliveryIntent = new Intent(AddAddressActivity.this,DeliveryActivity.class);
-                                    startActivity(deliveryIntent);
+                                    if (getIntent().getStringExtra("INTENT").equals("deliveryIntent")) {
+                                        Intent deliveryIntent = new Intent(AddAddressActivity.this, DeliveryActivity.class);
+                                        startActivity(deliveryIntent);
+                                    }
+                                    else{
+                                        MyAddressesActivity.refreshItem(DBqueries.selectedAddress, DBqueries.addressesModelList.size()-1);
+                                    }
+                                    DBqueries.selectedAddress = DBqueries.addressesModelList.size() - 1;
+
+                                    // ye if statement upar ka isliye dala h kyuki apan ko baar baar ye error aa rha tha
+                                    // error aisa tha ki
+                                    // say abhi user ne ek hi address add kiya h but then jab usne 2 ya zyada address add kiya and then wo agar back arrow press krke back gaya
+                                    // to usko ek ek krke apni purani screens dikhegi matlab
+
+                                    //eg:- aisa le le ki facebook me tune 5 page bharkr content likha login krne ke liye say
+                                    //and ab tu login ho gaya h and abhi tujhe wo pages nhi dikhne chhaiye cox tu login ho gya h
+                                    //but tune abhi jab back arrow press kiya to tujhe wo sare pages ke through jana padega aisa error abhi aa rha tha
+
+                                    //so isko solve krne ke liye humne kya kiya na ki intent ko jo naam h agar uss time pr screen change hote time intent ka jo naam h
+                                    //wo deliveryIntent aisa hua to hum sab kuchhh normal karenge warna finish kr denge
                                     finish();
+
                                 }
                                 else{
                                     String error = task.getException().getMessage();

@@ -67,7 +67,7 @@ public class MyCartFragment extends Fragment {
         }
 
 
-        cartAdapter = new CartAdapter(DBqueries.cartItemModelList,totalAmount);
+        cartAdapter = new CartAdapter(DBqueries.cartItemModelList,totalAmount,true);
         cartItemsRecyclerView.setAdapter(cartAdapter);
         cartAdapter.notifyDataSetChanged();
 

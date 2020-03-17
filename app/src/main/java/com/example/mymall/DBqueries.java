@@ -464,6 +464,7 @@ public class DBqueries {
                                 // matlab user ke pass agar koi address nhi h to list size zero hoga
                                 deliveryIntent = new Intent(context,AddAddressActivity.class);
                                 // to agar size zero h to addressactivity pr bhej dena
+                                deliveryIntent.putExtra("INTENT","deliveryIntent");
                                 }
                                 else{
                                     for (long x = 1; x< (long) task.getResult().get("list_size")+1; x++){

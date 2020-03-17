@@ -10,6 +10,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -77,6 +78,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int WISHLIST_FRAGMENT = 3;
     private static final int REWARDS_FRAGMENT = 4;
     private static final int ACCOUNT_FRAGMENT = 5;
+    private int scrollFlags;
+    private AppBarLayout.LayoutParams params;
     public static Boolean showCart = false;
 
     public static DrawerLayout drawer;
@@ -96,6 +99,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+        params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        scrollFlags = params.getScrollFlags();
 
 //        FloatingActionButton fab = findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -343,6 +349,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (fragmentNo == CART_FRAGMENT) {
             navigationView.getMenu().getItem(3).setChecked(true);
+            params.setScrollFlags(0);
+        }
+        else{
+            params.setScrollFlags(scrollFlags);
         }
         if (fragmentNo == WISHLIST_FRAGMENT) {
             navigationView.getMenu().getItem(4).setChecked(true);

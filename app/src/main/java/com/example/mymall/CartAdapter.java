@@ -25,10 +25,12 @@ public class CartAdapter extends RecyclerView.Adapter {
     private List<CartItemModel> cartItemModelList;
     private int lastPosition = -1;
     private TextView cartTotalAmount;
+    private boolean showDeleteBtn;
 
-    public CartAdapter(List<CartItemModel> cartItemModelList, TextView cartTotalAmount) {
+    public CartAdapter(List<CartItemModel> cartItemModelList, TextView cartTotalAmount, boolean showDeleteBtn) {
         this.cartItemModelList = cartItemModelList;
         this.cartTotalAmount = cartTotalAmount;
+        this.showDeleteBtn = showDeleteBtn;
     }
 
     @Override
@@ -81,8 +83,8 @@ public class CartAdapter extends RecyclerView.Adapter {
 
                 int totalItems = 0;
                 int totalItemPrice = 0;
-                String deliveryPrice ;
-                int totalAmount ;
+                String deliveryPrice="" ;
+                int totalAmount=0 ;
                 int savedAmount = 0;
 
                 for (int x = 0; x<cartItemModelList.size(); x++){
@@ -199,7 +201,12 @@ public class CartAdapter extends RecyclerView.Adapter {
                     quantityDialog.show();
                 }
             });
-
+            if(showDeleteBtn){
+                deleteBtn.setVisibility(View.VISIBLE);
+            }
+            else {
+                deleteBtn.setVisibility(View.GONE);
+            }
             deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -228,7 +235,7 @@ public class CartAdapter extends RecyclerView.Adapter {
 
         }
 
-        private void setTotalAmount(int totalItemText, int totalItemPriceText, String deliveryPriceText, int savedAmountText, int totalAmountText) {
+        private void setTotalAmount(int totalItemText, int totalItemPriceText, String deliveryPriceText,  int totalAmountText, int savedAmountText) {
 
             totalItems.setText("Price ("+totalItemText+" items)");
             totalItemPrice.setText("Rs."+totalItemPriceText+"/-");
