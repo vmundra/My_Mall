@@ -594,9 +594,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 if (currentUser == null) {
                     signInDialog.show();
                 } else {
-                    DeliveryActivity.cartItemModelList.clear();
                     DeliveryActivity.cartItemModelList = new ArrayList<>();
-
                     DeliveryActivity.cartItemModelList.add(new CartItemModel(CartItemModel.CART_ITEM, documentSnapshot.get("product_image_1").toString(),
                             documentSnapshot.get("product_title").toString(),
                             (long) documentSnapshot.get("free_coupens"),
