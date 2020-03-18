@@ -86,7 +86,7 @@ public class CartAdapter extends RecyclerView.Adapter {
 
                 int totalItems = 0;
                 int totalItemPrice = 0;
-                String deliveryPrice="" ;
+                String deliveryPrice;
                 int totalAmount=0 ;
                 int savedAmount = 0;
 
@@ -262,8 +262,8 @@ public class CartAdapter extends RecyclerView.Adapter {
             else{
                 deliveryPrice.setText("Rs."+deliveryPriceText+"/-");
             }
-            totalAmount.setText("Rs. "+totalAmountText+"/-");
-            cartTotalAmount.setText("Rs. "+totalAmountText+"/-");
+            totalAmount.setText("Rs."+totalAmountText+"/-");
+            cartTotalAmount.setText("Rs."+totalAmountText+"/-");
             savedAmount.setText("you saved Rs."+savedAmountText);
             LinearLayout parent = (LinearLayout) cartTotalAmount.getParent().getParent();
 

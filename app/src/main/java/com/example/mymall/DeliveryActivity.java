@@ -19,9 +19,29 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.gson.JsonObject;
+import com.paytm.pgsdk.PaytmOrder;
+import com.paytm.pgsdk.PaytmPGService;
+import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class DeliveryActivity extends AppCompatActivity {
     private Toolbar toolbar;
@@ -67,6 +87,8 @@ public class DeliveryActivity extends AppCompatActivity {
         paymentMethodDialog.setCancelable(true);
         paymentMethodDialog.getWindow().setBackgroundDrawable(DeliveryActivity.this.getDrawable(R.drawable.slider_background));
         paymentMethodDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        paytm = paymentMethodDialog.findViewById(R.id.paytm);
+
 
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -93,7 +115,6 @@ public class DeliveryActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 paymentMethodDialog.show();
-                paytm = paymentMethodDialog.findViewById(R.id.paytm);
             }
         });
 
@@ -106,6 +127,134 @@ public class DeliveryActivity extends AppCompatActivity {
                     ActivityCompat.requestPermissions(DeliveryActivity.this, new String[]{Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS}, 101);
                 }
 
+                /////////////////////////////////////////////////////////////////////////for Paytm
+                final String M_id = "ivvavE63222735647438";
+                final String cusomer_id = FirebaseAuth.getInstance().getUid();
+                final String order_id = UUID.randomUUID().toString().substring(0,28); //matlab 28 characters ki random string generate karenge
+                /// coz paytm ko hamesha ye random string dena hota h
+                String url = "https://bhaikiplatan.000webhostapp.com/paytm/generateChecksum.php";
+                final String callBackUrl = "https://pguat.paytm.com/paytmchecksum/paytmCallback.jsp";
+                /////////////////////////////////////////////////////////////////////////for Paytm
+
+
+                /////////////////////////////////////////////////////////////////////////for Volley
+                RequestQueue requestQueue = Volley.newRequestQueue(DeliveryActivity.this);
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            Toast.makeText(DeliveryActivity.this, "1 me hu", Toast.LENGTH_SHORT).show();
+                            if (jsonObject.has("CHECKSUMHASH")){
+                                String CHECKSUMHASH = jsonObject.getString("CHECKSUMHASH");
+                                Toast.makeText(DeliveryActivity.this, "2 me hu", Toast.LENGTH_SHORT).show();
+
+
+//                                PaytmPGService paytmPGService = PaytmPGService.getStagingService("");
+                                PaytmPGService paytmPGService = PaytmPGService.getProductionService();
+                                Toast.makeText(DeliveryActivity.this, "3 me hu", Toast.LENGTH_SHORT).show();
+
+
+                                HashMap<String, String> paramMap = new HashMap<String,String>();
+                                paramMap.put( "MID" , M_id);
+// Key in your staging and production MID available in your dashboard
+                                paramMap.put( "ORDER_ID" , order_id);
+                                paramMap.put( "CUST_ID" , cusomer_id);
+                                paramMap.put( "CHANNEL_ID" , "WAP");
+                                paramMap.put( "TXN_AMOUNT" , totalAmount.getText().toString().substring(3,totalAmount.getText().length()-2)); //matlab apan sirf paise kitne h wo le rhe h Rs. and /- ye sab nhi
+                                paramMap.put( "WEBSITE" , "WEBSTAGING");
+// This is the staging value. Production value is available in your dashboard
+                                paramMap.put( "INDUSTRY_TYPE_ID" , "Retail");
+// This is the staging value. Production value is available in your dashboard
+                                paramMap.put( "CALLBACK_URL", callBackUrl);
+                                paramMap.put("CHECKSUMHASH",CHECKSUMHASH);
+
+                                PaytmOrder order = new PaytmOrder(paramMap);
+                                Toast.makeText(DeliveryActivity.this, "4 me hu", Toast.LENGTH_SHORT).show();
+                                paytmPGService.initialize(order,null);
+                                paytmPGService.startPaymentTransaction(DeliveryActivity.this, true, true, new PaytmPaymentTransactionCallback() {
+
+
+                                    @Override
+                                    public void onTransactionResponse(Bundle inResponse) {
+                                        /*Display the message as below */
+                                        Toast.makeText(getApplicationContext(), "Payment Transaction response " + inResponse.toString(), Toast.LENGTH_LONG).show();
+                                    }
+
+                                    @Override
+                                    public void networkNotAvailable() {
+                                        /*Display the message as below */
+                                        Toast.makeText(getApplicationContext(), "Network connection error: Check your internet connectivity", Toast.LENGTH_LONG).show();
+                                    }
+
+                                    @Override
+                                    public void clientAuthenticationFailed(String inErrorMessage) {
+                                        /*Display the message as below */
+                                        Toast.makeText(getApplicationContext(), "Authentication failed: Server error" + inErrorMessage.toString(), Toast.LENGTH_LONG).show();
+                                    }
+
+                                    @Override
+                                    public void someUIErrorOccurred(String inErrorMessage) {
+                                        /*Display the error message as below */
+                                        Toast.makeText(getApplicationContext(), "UI Error " + inErrorMessage , Toast.LENGTH_LONG).show();
+                                    }
+
+                                    @Override
+                                    public void onErrorLoadingWebPage(int iniErrorCode, String inErrorMessage, String inFailingUrl) {
+                                        /*Display the message as below */
+                                        Toast.makeText(getApplicationContext(), "Unable to load webpage " + inErrorMessage.toString(), Toast.LENGTH_LONG).show();
+
+                                    }
+
+                                    @Override
+                                    public void onBackPressedCancelTransaction() {
+                                        /*Display the message as below */
+                                        Toast.makeText(getApplicationContext(), "Transaction cancelled" , Toast.LENGTH_LONG).show();
+                                    }
+
+                                    @Override
+                                    public void onTransactionCancel(String inErrorMessage, Bundle inResponse) {
+                                        /*Display the message as below */
+                                        Toast.makeText(getApplicationContext(), "Transaction Cancelled " + inResponse.toString(), Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            }
+                        }
+                        catch (JSONException e){
+                            Toast.makeText(DeliveryActivity.this, "5 me hu", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        loadingDialog.dismiss();
+                        Toast.makeText(DeliveryActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                {
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String, String> paramMap = new HashMap<String,String>();
+                        paramMap.put( "MID" , M_id);
+// Key in your staging and production MID available in your dashboard
+                        paramMap.put( "ORDER_ID" , order_id);
+                        paramMap.put( "CUST_ID" , cusomer_id);
+                        paramMap.put( "CHANNEL_ID" , "WAP");
+                        paramMap.put( "TXN_AMOUNT" , totalAmount.getText().toString().substring(2,totalAmount.getText().length()-2)); //matlab apan sirf paise kitne h wo le rhe h Rs. and /- ye sab nhi
+                        paramMap.put( "WEBSITE" , "WEBSTAGING");
+// This is the staging value. Production value is available in your dashboard
+                        paramMap.put( "INDUSTRY_TYPE_ID" , "Retail");
+// This is the staging value. Production value is available in your dashboard
+                        paramMap.put( "CALLBACK_URL", callBackUrl);
+                        return paramMap;
+                    }
+                };
+
+                requestQueue.add(stringRequest);
+                /////////////////////////////////////////////////////////////////////////for Volley
 
             }
         });
@@ -131,7 +280,11 @@ public class DeliveryActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        loadingDialog.dismiss();
+    }
 }
 
 
