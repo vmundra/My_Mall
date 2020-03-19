@@ -123,6 +123,7 @@ public class DeliveryActivity extends AppCompatActivity {
         cod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                paymentMethodDialog.dismiss();
                 Intent otpIntent = new Intent(DeliveryActivity.this,OTPverificationActivity.class);
                 otpIntent.putExtra("mobileNo",mobileNo.substring(0,10));
                 startActivity(otpIntent);
