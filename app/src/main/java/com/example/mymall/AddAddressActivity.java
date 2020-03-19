@@ -84,6 +84,7 @@ public class AddAddressActivity extends AppCompatActivity {
                 Map<String, Object> addAddress = new HashMap();
                 addAddress.put("list_size", (long)DBqueries.addressesModelList.size()+1);
                 addAddress.put("fullname_"+String.valueOf((long)DBqueries.addressesModelList.size()+1),name.getText().toString());
+                addAddress.put("mobile_no_"+String.valueOf((long)DBqueries.addressesModelList.size()+1),mobileNo.getText().toString());
                 addAddress.put("address_"+String.valueOf((long)DBqueries.addressesModelList.size()+1),city.getText().toString());
                 addAddress.put("pincode_"+String.valueOf((long)DBqueries.addressesModelList.size()+1),pincode.getText().toString());
                 addAddress.put("selected_"+String.valueOf((long)DBqueries.addressesModelList.size()+1),true);
@@ -104,7 +105,7 @@ public class AddAddressActivity extends AppCompatActivity {
                                     if (DBqueries.addressesModelList.size() > 0) {
                                         DBqueries.addressesModelList.get(DBqueries.selectedAddress).setSelected(false);
                                     }
-                                    DBqueries.addressesModelList.add(new AddressesModel(name.getText().toString(),city.getText().toString(),pincode.getText().toString(),true));
+                                    DBqueries.addressesModelList.add(new AddressesModel(name.getText().toString(),city.getText().toString(),pincode.getText().toString(),true,mobileNo.getText().toString()));
 
                                     if (getIntent().getStringExtra("INTENT").equals("deliveryIntent")) {
                                         Intent deliveryIntent = new Intent(AddAddressActivity.this, DeliveryActivity.class);

@@ -51,7 +51,8 @@ public class DeliveryActivity extends AppCompatActivity {
     public static List<CartItemModel> cartItemModelList;
     private TextView fullname, fullAddress, pincode;
     private Button continueBtn;
-    private ImageButton paytm;
+    private ImageButton paytm, cod;
+    private String name, mobileNo;
     private Dialog loadingDialog, paymentMethodDialog;
 
     public static final int SELECT_ADDRESS = 0;
@@ -88,6 +89,7 @@ public class DeliveryActivity extends AppCompatActivity {
         paymentMethodDialog.getWindow().setBackgroundDrawable(DeliveryActivity.this.getDrawable(R.drawable.slider_background));
         paymentMethodDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         paytm = paymentMethodDialog.findViewById(R.id.paytm);
+        cod = paymentMethodDialog.findViewById(R.id.cod_btn);
 
 
 
@@ -115,6 +117,15 @@ public class DeliveryActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 paymentMethodDialog.show();
+            }
+        });
+
+        cod.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent otpIntent = new Intent(DeliveryActivity.this,OTPverificationActivity.class);
+                otpIntent.putExtra("mobileNo",mobileNo.substring(0,10));
+                startActivity(otpIntent);
             }
         });
 
@@ -263,7 +274,10 @@ public class DeliveryActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        fullname.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getFullname());
+
+        name = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getFullname();
+        mobileNo = DBqueries.addressesModelList.get(DBqueries.selectedAddress).getMobileNo();
+        fullname.setText(name);
         fullAddress.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getAddress());
         pincode.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getPincode());
     }
